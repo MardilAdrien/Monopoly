@@ -1,0 +1,8 @@
+td.case{
+	border:1px solid black;
+	width: 8%;
+}
+td.blank_space{
+	border:1px solid black;
+	width:2em;
+}
