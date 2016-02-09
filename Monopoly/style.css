@@ -1,11 +1,22 @@
 td.caseHorizontale{
 	border:1px solid black;
 	width: 9%;
+	text-transform: uppercase;
+	padding:3px;
 }
+
+td.caseBord{
+	border:1px solid black;
+	min-width: 9%;
+	text-transform: uppercase;
+	padding:5px;
+}
+
 td.caseVerticale{
 	border:1px solid black;
 	width: 9%;
-	height:8%;
+	text-transform: uppercase;
+	padding:5px;
 }
 
 td.blank_space{
@@ -14,35 +25,36 @@ td.blank_space{
 }
 
 .pion{
-    width:80px;
-    height: 14px;
-    margin:auto;
+    min-width:70px;
+    max-width:103px;
+    height: 4px;
 }
 
 .pionRouge{
-    width:12px;
-    height: 12px;
+    width:10px;
+    height: 8px;
     background: Red;
     border-radius :50%;
     margin:auto;
 	border-style: solid;
     border-width: 1px;
 	display: inline-block;
+	margin:4px;
 }
 
 .pionBleu{
-    width:12px;
-    height: 12px;
+    width:10px;
+    height: 8px;
     background: Blue;
     border-radius :50%;
     margin:auto;	
 	border-style: solid;
     border-width: 1px;
-display: inline-block;}
+	display: inline-block;}
 
 .pionVert{
-    width:12px;
-    height: 12px;
+    width:10px;
+    height: 8px;
     background: Green;
     border-radius :50%;
     margin:auto;	
@@ -51,12 +63,25 @@ display: inline-block;}
 display: inline-block;}
 
 .pionJaune{
-    width:12px;
-    height: 12px;
+    width:10px;
+    height: 8px;
     background: Yellow;
     border-radius :50%;
     margin:auto;
 	border-style: solid;
     border-width: 1px;
 	display: inline-block;
+}
+
+.couleurHorizontale{
+	height:12px;
+	border-style: solid;
+    border-width: 1px;
+}
+
+.couleurVerticale{
+	
+	min-width:12px;
+	border-style: solid;
+    border-width: 1px;
 }
