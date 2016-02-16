@@ -23,23 +23,24 @@
 				border : 2px solid black;
 				border-radius: 10px;
 			}
-
 		</style>
 		<script type="text/javascript">
+			var tmp;
+			var nombre;
+			var d1 = 0;
+			var d2 = 0;
+
 			function lancerDes(){
 				var y = document.getElementsByClassName("circle");
 
 				for (i = 0; i < y.length; i++) {
 					y[i].style.visibility = "hidden";
 				}
-
-				var des_1 = getRandomInt(1,7);
-				var des_2 = getRandomInt(1,7);
+				this.nombre = 20;
 				
-				setNumberFace(des_1, "des_1");
-				setNumberFace(des_2, "des_2");
+				tmp = setInterval(affichageRandom,70);
 
-				document.getElementById("resultat").innerHTML = des_1+des_2;
+				
 			}
 			
 			function setNumberFace(nb, loc) {
@@ -51,6 +52,27 @@
 
 			function getRandomInt(min, max) {
 				return Math.floor(Math.random() * (max - min)) + min;
+			}
+
+			function affichageRandom() {
+				var y = document.getElementsByClassName("circle");
+
+				for (i = 0; i < y.length; i++) {
+					y[i].style.visibility = "hidden";
+				}
+				this.d1 = getRandomInt(1,7);
+				this.d2 = getRandomInt(1,7);
+				setNumberFace(this.d1, "des_1");
+				setNumberFace(this.d2, "des_2");
+
+				if (this.nombre == 0) {
+					clearInterval(tmp);
+					document.getElementById("resultat").innerHTML = this.d1+this.d2;
+				}
+
+				this.nombre--;
+
+				
 			}
 		</script>
 	</head>
