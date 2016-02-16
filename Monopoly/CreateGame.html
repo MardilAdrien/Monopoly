@@ -1,0 +1,74 @@
+ <html lang="en-US">
+  <head> 
+	<meta charset="UTF-8"> 
+	<title>Monopoly</title> 
+	<link rel="icon" type="image/png" href="images/icon-128.png"> 
+	<meta name="viewport" content="width=device-width">  
+	<script src="scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="monopoly_Test.js"></script>
+	<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="scripts/modal.js"></script>
+	
+	<link href="style/bootstrap.min.css" type="text/css" rel="stylesheet"> 
+	<link href="style/style.css" type="text/css" rel="stylesheet"> 
+ </head> 
+ <body> 
+ <div class="col-md-12">
+ <div class="col-md-4"></div>
+ <img class="col-md-4 col-centered" src="images/monopoly.png"/>
+ <div class="col-md-4"></div></div>
+ <!-- Créer une Partie -->
+ <div class="col-md-12">
+ <div class="col-md-4"></div>
+ <img class="col-md-1 col-centered" src="images/des.png" width="60px" height="50px"/>
+ <button type="button" class="btn btn-info btn-lg col-md-2 col-centered" data-toggle="modal" data-target="#myModal">JOUER</button>
+ <img class="col-md-1 col-centered" src="images/des.png" width="60px" height="50px"/>
+ <div class="col-md-4"></div></div>
+ <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+	
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" style="font-weight:bold">Créer une partie</h4>
+      </div>
+      <div class="modal-body">
+        <fieldset>
+			<legend>Sélection des joueurs</legend>
+			<form class="form-horizontal" role="form">
+		<div class="form-group">
+		<div class="col-md-12 col-centered" style="margin-bottom: 20px;">
+			<select id="playernumber" class="form-control" title="Select the number of players for the game.">
+				<option selected="selected">2 Joueurs</option>
+				<option>3 Joueurs</option>
+				<option>4 Joueurs</option>
+			</select>
+			</div>
+			
+			
+		</div>
+		
+
+		<div class="col-md-12 form-group">
+				<div class="col-md-8" id="player-wrappers">
+				</div>
+				<div class="col-md-4">
+				</div>
+			
+		</div>
+		</fieldset>
+      </div>
+      <div class="modal-footer">
+		<input type="button" class="btn btn-primary" value="JOUER" onclick="game_ns.setup();" title="Begin playing." />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+		
+	</body>
+	 </html>
