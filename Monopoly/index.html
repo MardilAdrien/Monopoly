@@ -8,11 +8,15 @@
 	<link href="style/style.css" type="text/css" rel="stylesheet"> 
  </head> 
  <body> 
+	 <script type="text/javascript" src="monopoly.js"></script>
+	 <script type="text/javascript" src="pion.js"></script>
 	 <link href="style.css" rel="stylesheet" type="text/css" />
 		 <table cellspacing="0" cellpadding="1" style="background-color:#EEFFCC;font-size:42%;line-height:1.2;vertical-align:middle;text-align:center;"> 
 			 <tr align="center"> 
 				 <td class="caseBord" colspan="3" rowspan="3">
-					DÉPART<br />Recevez 20 000 F
+					DÉPART
+					<div class="pion" id="case1"></div>
+					<br />Recevez 20 000 F
 				</td> 
 				 <td rowspan="2" class="caseHorizontale">
 					Bd de Belleville
@@ -22,11 +26,11 @@
 				</td> 
 				 <td rowspan="3" class="caseHorizontale">
 					 Caisse de<br />Communauté
-					 <div class="pion" id="case2"></div>
+					 <div class="pion" id="case3"></div>
 				 </td> 
 				 <td  rowspan="2" class="caseHorizontale">
 					 RUE LECOURBE
-					 <div class="pion" id="case2"></div>
+					 <div class="pion" id="case4"></div>
 					 <br />6 000 F
 				 </td> 
 				 <td  rowspan="3" class="caseHorizontale">
@@ -259,9 +263,8 @@
 			 </tr> 
 		 </table> 
  </body> 
-  
- <script src="scripts/battery.js"></script> 
- <script src="scripts/install.js"></script> 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script> 
-  
+ <script>
+	initMonopoly();
+	deplacerPion(pionRouge,3);
+</script>  
  </html> 
