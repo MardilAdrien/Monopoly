@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-	<head>
 		<style type="text/css">
 			.circle {
 				background-color:black;
@@ -32,7 +31,6 @@
 
 			function lancerDes(){
 				var y = document.getElementsByClassName("circle");
-
 				for (i = 0; i < y.length; i++) {
 					y[i].style.visibility = "hidden";
 				}
@@ -70,14 +68,10 @@
 					document.getElementById("resultat").innerHTML = this.d1+this.d2;
 				}
 
-				this.nombre--;
-
-				
+				this.nombre--;				
 			}
 		</script>
-	</head>
-	
-	<body>
+
 		<table id="des_1">
 			<tr>
 				<td class="circle 2 3 4 5 6"></td>
@@ -114,8 +108,8 @@
 			</tr>
 		</table>
 
-		<button onclick="lancerDes();">Lancer des</button>
+		<button onclick="lancerDes();">Lancer dés</button>
 		
 		<div id="resultat"></div>
-	</body>
+
 </html>
