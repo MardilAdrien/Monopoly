@@ -89,3 +89,25 @@ display: inline-block;}
 	text-align:center;
 	vertical-align: middle;
 }
+
+.circle {
+	background-color:black;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	visibility: hidden;
+}
+
+#des_1, #des_2 {
+	width: 45px;
+	height: 45px;
+}
+
+#des_1 {
+	float: left;
+}
+
+.tableauDes {
+	border : 2px solid black;
+	border-radius: 10px;
+}
