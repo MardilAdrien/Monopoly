@@ -88,6 +88,7 @@ display: inline-block;}
 .emplacement{
 	text-align:center;
 	vertical-align: middle;
+	width:33%;
 }
 
 .circle {
@@ -103,11 +104,15 @@ display: inline-block;}
 	height: 45px;
 }
 
-#des_1 {
-	float: left;
-}
-
 .tableauDes {
 	border : 2px solid black;
 	border-radius: 10px;
+}
+
+.plateau{
+	background-color:#EEFFCC;
+	font-size:42%;
+	line-height:1.2;
+	vertical-align:middle;
+	text-align:center;
 }
