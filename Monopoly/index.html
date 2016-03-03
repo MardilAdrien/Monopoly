@@ -62,7 +62,6 @@
       </div>
       <div class="modal-footer">
 		<input type="button" class="btn btn-primary" value="JOUER" onclick="" title="Begin playing." />
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
 	      </div>
@@ -112,10 +111,35 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal">Refuser</button>
       </div>
     </div>
-
-
   </div>
 </div>
+
+
+	 <!-- Modal Carte Chance -->
+<div id="modalChance" class="modal fade" role="dialog" > 
+  <div class="modal-dialog" style="width:500px; height:350px">
+
+	<!-- Modal content Carte Chance -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" style="font-weight:bold">Chance</h4>
+      </div>
+      <div id="loyer" class="modal-body">
+        <fieldset>
+			<form class="form-horizontal" role="form">
+		<div id="fiche" class="form-group" style="background-color:white;font-size:12px">
+			<!-- Ici on retrouve l'ID utilisé pour récupérer les infos des cartes Chance -->
+			<div class="infoChance" style="text-align:center"></div>
+		<hr/>
+		<input type="button" class="btn btn-primary" value="OK" onclick="" title="Acheter" />
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
 <script>
 		$('#modalPartie').modal("show");
 		
