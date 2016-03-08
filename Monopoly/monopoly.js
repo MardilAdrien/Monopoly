@@ -1,4 +1,6 @@
 var nbCase = 0;
+var nbCarteChance = 0;
+var nbCarteCommunaute = 0;
 
 function initMonopoly(){
 	this.pionRouge = new Pion("Rouge");
@@ -39,6 +41,7 @@ function melangeDes() {
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
 		document.getElementById("resultat").innerHTML = nb;
 		pionRouge.deplacerPion(nb);
+		actionCase(pionRouge,pionRouge.position);
 	}
 	else
 		gestionnaireDes.nombre--;				
@@ -47,26 +50,50 @@ function melangeDes() {
 function actionCase(pion,position) {
 	var Contenu = Fichier('carte_monopoly.json');
 	Contenu = JSON.parse(Contenu);
-	alert(Contenu.fiches[position].type);
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
-
+			//var doc = document.getElementById("modalLoyer");
+			//doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
+			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
+			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
+			document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
+			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
+			document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
+			document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+			$('#modalLoyer').modal("show");
 			break;
 		case "chance" :
-			var nb = Math.floor(Math.random() * ( - 1)) + 1;
-			alert(Contenu.chance[nb].nom)
+			var doc = document.getElementById("modalCarte");
+			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[this.nbCarteChance%Contenu.chance.length].nom;
+			this.nbCarteChance++;
+			$('#modalCarte').modal("show");
 			break;
 		case "communaute" :
-
+			var doc = document.getElementById("modalCarte");
+			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[this.nbCarteCommunaute%Contenu.communaute.length].nom;
+			this.nbCarteCommunaute++;
+			$('#modalCarte').modal("show");
 			break;
 		case "taxe" :
-
+			
 			break;
 		case "special" :
 
 			break;
 		case "gare" :
-
+			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
+			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
+			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
+			document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
+			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
+			document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
+			document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+			$('#modalLoyer').modal("show");
 			break;
 		case "prison" :
 			
