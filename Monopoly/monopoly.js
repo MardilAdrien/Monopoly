@@ -74,10 +74,7 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-<<<<<<< HEAD
 		log(pionRouge, nb);
-=======
->>>>>>> origin/master
 		getPion(numJoueurEnJeu).deplacerPion(nb);
 	}
 	else
@@ -135,7 +132,6 @@ function actionCase(pion,position) {
 			break;
 	}
 	prochainJoueur();
-<<<<<<< HEAD
 	document.getElementById('boutonDes').style.visibility = 'visible';
 }
 
@@ -146,8 +142,6 @@ function achat(pion) {
 function log(pion,texte) {
 	var nom = "pion"+pion.couleur;
 	document.getElementById("zoneTexte").innerHTML += nom+" : "+texte+"\n";
-=======
->>>>>>> origin/master
 }
 
 function Fichier(fichier) {
