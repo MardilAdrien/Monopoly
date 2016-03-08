@@ -7,8 +7,8 @@
 	<script type="text/javascript" src="monopoly.js"></script>
 	<script type="text/javascript" src="pion.js"></script>
 	<script type="text/javascript" src="des.js"></script>
-		<script src="scripts/jquery.min.js"></script>
-	<script type="text/javascript" src="monopoly_Test.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+
 	<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
 	<script type="text/javascript" src="scripts/modal.js"></script>
 	 
@@ -40,9 +40,9 @@
 							<div class="form-group">
 								<div class="col-md-10 col-centered" style="margin-bottom: 20px;">
 									<select id="playernumber" class="form-control" title="Select the number of players for the game.">
-										<option selected="selected">2 Joueurs</option>
-										<option>3 Joueurs</option>
-										<option>4 Joueurs</option>
+										<option selected="selected" value="2">2 Joueurs</option>
+										<option value="3">3 Joueurs</option>
+										<option value="4">4 Joueurs</option>
 									</select>
 								</div>				
 							</div>			
@@ -56,7 +56,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input type="button" class="btn btn-primary" value="JOUER" onclick="" title="Jouer" />
+					<input type="button" class="btn btn-primary" value="JOUER" onclick="initMonopoly()" title="Jouer" />
 				</div>
 			</div>
 		</div>
@@ -132,12 +132,9 @@
 			</div>
 		</div>
 	</div>
-
-
 	<script>
 		$('#modalPartie').modal("show");
-	</script>
-	
+	</script>	
 	<!-- Plateau Monopoly -->
 		 <table cellspacing="0" cellpadding="1" class="plateau"> 
 			 <tr align="center"> 
@@ -262,7 +259,6 @@
 									</tr>
 								</table>
 								<button onclick="gestionnaireDes.lancerDes();">Lancer dés</button>	
-								<div id="resultat"></div>
 							</td>
 							<td colspan="3" width="50%" class="emplacement">
 								<img src="images/carte-chance.jpg" width="70%"/>

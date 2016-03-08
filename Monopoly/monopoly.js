@@ -1,12 +1,46 @@
 var nbCase = 0;
 var nbCarteChance = 0;
 var nbCarteCommunaute = 0;
+var nbJoueur;
+var numJoueurEnJeu = 1;
 
 function initMonopoly(){
+	$('#modalPartie').modal('hide');
+	nbJoueur = document.getElementById("playernumber").value;
 	this.pionRouge = new Pion("Rouge");
 	this.pionBleu = new Pion("Bleu");
-	this.gestionnaireDes = new GestionnaireDes();
+	
+	var html = document.getElementById("case1").innerHTML;
+	var x = "<p class=\"pionRouge\"></p><p class=\"pionBleu\"></p>";
+	if(nbJoueur > 2)
+	{
+		this.pionJaune = new Pion("Jaune");
+		x += "<p class=\"pionJaune\"></p>";
 	}
+	if(nbJoueur > 3)
+	{
+		this.pionVert = new Pion("Vert");
+		x += "<p class=\"pionVert\"></p>";
+	}
+
+	document.getElementById("case1").innerHTML = x;
+	this.gestionnaireDes = new GestionnaireDes();
+}
+
+function prochainJoueur(){
+	numJoueurEnJeu = (numJoueurEnJeu % nbPion)+1;
+}
+
+function getPion(num){
+	if(num == 1)
+		return pionRouge;
+	if(num == 2)
+		return pionBleu;
+	if(num == 3)
+		return pionJaune;
+	if(num == 4)
+		return pionVert;
+}
 	
 function avancerPion(pion){
 	var html = document.getElementById("case"+pion.position).innerHTML;
@@ -21,6 +55,7 @@ function avancerPion(pion){
 	
 	if(this.nbCase == 1){
 		clearInterval(timerDeplacement);
+		actionCase(pion,pion.position-1);
 	}
 	this.nbCase--;
 }
@@ -39,9 +74,7 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-		document.getElementById("resultat").innerHTML = nb;
-		pionRouge.deplacerPion(nb);
-		actionCase(pionRouge,pionRouge.position);
+		getPion(numJoueurEnJeu).deplacerPion(nb);
 	}
 	else
 		gestionnaireDes.nombre--;				
@@ -98,8 +131,8 @@ function actionCase(pion,position) {
 		case "prison" :
 			
 			break;
-
 	}
+	prochainJoueur();
 }
 
 function Fichier(fichier) {
