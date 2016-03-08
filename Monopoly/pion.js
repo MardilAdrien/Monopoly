@@ -11,9 +11,6 @@ function Pion(couleur) {
 		timerDeplacement = setInterval(avancerPion,300,this);
 		
 	}
-
-	
-
 }
 
 

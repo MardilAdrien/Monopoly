@@ -25,6 +25,8 @@ function initMonopoly(){
 
 	document.getElementById("case1").innerHTML = x;
 	this.gestionnaireDes = new GestionnaireDes();
+	this.gestionnaireTerrain = new gestionnaireTerrain();
+	gestionnaireTerrain.initTerrain();
 }
 
 function prochainJoueur(){
