@@ -87,6 +87,7 @@ function actionCase(pion,position) {
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
 			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("informations-bottom").style.backgroundColor = Contenu.fiches[position].colors[0];
 			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
 			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
 			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
