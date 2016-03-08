@@ -4,6 +4,9 @@ var nbCarteCommunaute = 0;
 var nbJoueur;
 var numJoueurEnJeu = 1;
 
+var Contenu = Fichier('carte_monopoly.json');
+Contenu = JSON.parse(Contenu);
+
 function initMonopoly(){
 	$('#modalPartie').modal('hide');
 	nbJoueur = document.getElementById("playernumber").value;
@@ -22,7 +25,6 @@ function initMonopoly(){
 		this.pionVert = new Pion("Vert");
 		x += "<p class=\"pionVert\"></p>";
 	}
-
 	document.getElementById("case1").innerHTML = x;
 	this.gestionnaireDes = new GestionnaireDes();
 }
@@ -74,7 +76,7 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-		log(pionRouge, nb);
+		log(getPion(numJoueurEnJeu), nb);
 		getPion(numJoueurEnJeu).deplacerPion(nb);
 	}
 	else
@@ -82,12 +84,8 @@ function melangeDes() {
 }
 
 function actionCase(pion,position) {
-	var Contenu = Fichier('carte_monopoly.json');
-	Contenu = JSON.parse(Contenu);
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
-			//var doc = document.getElementById("modalLoyer");
-			//doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].nom;
 			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
 			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
 			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
@@ -96,6 +94,7 @@ function actionCase(pion,position) {
 			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
 			document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
 			document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+			document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
 			$('#modalLoyer').modal("show");
 			break;
 		case "chance" :
@@ -113,7 +112,11 @@ function actionCase(pion,position) {
 			$('#modalCarte').modal("show");
 			break;
 		case "taxe" :
-			
+			var doc = document.getElementById("modalCarte");
+			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.fiches[position].nom+". Vous payez "+Contenu.fiches[position].prix;
+			getPion(numJoueurEnJeu).argent = getPion(numJoueurEnJeu).agent-Contenu.fiches[position].prix;
+			$('#modalCarte').modal("show");
 			break;
 		case "special" :
 
@@ -131,12 +134,16 @@ function actionCase(pion,position) {
 			
 			break;
 	}
-	prochainJoueur();
+	//prochainJoueur();
+	document.getElementById('boutonDes').innerHTML = "Fin de tour"
 	document.getElementById('boutonDes').style.visibility = 'visible';
 }
 
 function achat(pion) {
-	log(pion, "test");
+	alert(pion.couleur);
+	log(pion, "Achete "+Contenu.fiches[pion.position].nom+" "+Contenu.fiches[pion.position].prix);
+	pion.argent -= Contenu.fiches[pion.position].prix;
+	log(pion, "Il vous reste "+pion.argent+" F");
 }
 
 function log(pion,texte) {
