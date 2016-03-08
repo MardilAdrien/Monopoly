@@ -24,6 +24,9 @@ td.blank_space{
 	width:2em;
 }
 
+td.maison{border:1px solid black; margin:auto;}
+tr.maison{border:1px solid black; margin:auto;}
+
 .pion{
     min-width:70px;
     max-width:103px;
