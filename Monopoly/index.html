@@ -76,8 +76,8 @@
 				<div id="loyer" class="modal-body">
 					<fieldset>
 						<form class="form-horizontal" role="form">
-							<div id="fiche" class="form-group" style="background-color:white;font-size:12px">
-								<table style="border:1px solid black">
+							<div id="fiche" class="form-group" style="background-color:white;font-size:12px;text-align:center">
+								<table style="border:1px solid black; margin:auto">
 									<tr><td></td><td>F</td></tr>
 									<tr><td>ACHAT</td><td id="achat" name="achat"></td></tr>
 									<tr><td>LOYER terrain nu</td><td id="loyer0"></td></tr>
@@ -92,11 +92,58 @@
 									Loyer double si <span style="font-weight:bold">TOUS</span> les terrains du groupe de Couleur.  
 								</div>
 								<hr/>
-								<div>
+								<div style="text-align:center"> 
 									Prix des Maisons  F <span id="prixMaison" name="prixMaison"></span><br/>
 									Prix d'un H&ocirc;tel&nbsp; F <span id="prixHotel" name="prixMaison"></span><br/>
-								</div>
 								Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-primary" value="Acheter" onclick="" title="Acheter" />
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Refuser</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Modal Gare -->
+	<div id="modalGare" class="modal fade" role="dialog" > 
+		<div class="modal-dialog" style="width:350px;">
+
+			<!-- Modal content Gare -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- le h4 servira pour le nom de la gare, ID a recupérer pour le js -->
+					<h4 id="informations-gare" class="modal-title" style="font-weight:bold; text-align:center"></h4>
+				</div>
+				<div id="loyer" class="modal-body">
+					<fieldset>
+						<form class="form-horizontal" role="form">
+							<div id="fiche" class="form-group" style="background-color:white;font-size:12px;text-align:center">
+								<table style="border:1px solid black; margin:auto">
+									<tr><td></td><td>F</td></tr>
+									<tr><td>ACHAT</td><td id="achat" name="achat"></td></tr>
+									<tr><td>LOYER terrain nu</td><td id="loyer0"></td></tr>
+									<tr class="gare"><td> - 1 Gare</td><td id="loyer1" name="loyer1"></td></tr>
+									<tr class="gare"><td> - 2 Gares</td><td id="loyer2" name="loyer2"></td></tr>
+									<tr class="gare"><td> - 3 Gares</td><td id="loyer3" name="loyer3"></td></tr>
+									<tr class="gare"><td> - 4 Gares</td><td id="loyer4" name="loyer4"></td></tr>
+								</table>
+								<hr/>
+								<div class="infos-group" style="text-align:center">
+									Loyer double si <span style="font-weight:bold">TOUS</span> les terrains du groupe de Couleur.  
+								</div>
+								<hr/>
+								<div style="text-align:center"> 
+									Prix des Gares  F <span id="prixMaison" name="prixMaison"></span><br/>
+									Prix d'un H&ocirc;tel&nbsp; F <span id="prixHotel" name="prixMaison"></span><br/>
+								Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+								</div>
 							</div>
 						</form>
 					</fieldset>
