@@ -51,7 +51,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input type="button" class="btn btn-primary" value="JOUER" onclick="initMonopoly();" title="Jouer" />
+					<input type="button" class="btn btn-primary" value="JOUER" onclick="initMonopoly();log(getPion(numJoueurEnJeu), 'A vous de jouer.');" title="Jouer" />
 				</div>
 			</div>
 		</div>
@@ -173,6 +173,9 @@
 							</div>
 						</form>
 					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-primary" value="OK" onclick="$('#modalCarte').modal('hide');" title="OK" />
 				</div>
 			</div>
 		</div>

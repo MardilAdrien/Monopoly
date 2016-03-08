@@ -49,10 +49,14 @@ function avancerPion(pion){
 	var x = "<p class=\"pion"+pion.couleur+"\"></p>";
 	html = html.replace(x,"");
 	document.getElementById("case"+pion.position).innerHTML = html;
-	if(pion.position == 40)
+	if(pion.position == 40) {
 		pion.position = 1;
-	else
+		log(pion, "Vous passez par la case Départ et touchez 20000 F");
+		pion.argent += 20000;
+	}
+	else {
 		pion.position++;
+	}
 	document.getElementById("case"+pion.position).innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
 	
 	if(this.nbCase == 1){
@@ -76,7 +80,7 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-		log(getPion(numJoueurEnJeu), nb);
+		log(getPion(numJoueurEnJeu), 'A fait '+nb);
 		getPion(numJoueurEnJeu).deplacerPion(nb);
 	}
 	else
@@ -141,9 +145,9 @@ function actionCase(pion,position) {
 }
 
 function achat(pion) {
-	alert(pion.couleur);
-	log(pion, "Achete "+Contenu.fiches[pion.position].nom+" "+Contenu.fiches[pion.position].prix);
-	pion.argent -= Contenu.fiches[pion.position].prix;
+	alert(pion.position-1);
+	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
+	pion.argent -= Contenu.fiches[pion.position-1].prix;
 	log(pion, "Il vous reste "+pion.argent+" F");
 }
 
