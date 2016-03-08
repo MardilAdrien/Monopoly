@@ -4,6 +4,9 @@ var nbCarteCommunaute = 0;
 var nbJoueur;
 var numJoueurEnJeu = 1;
 
+var Contenu = Fichier('carte_monopoly.json');
+Contenu = JSON.parse(Contenu);
+
 function initMonopoly(){
 	$('#modalPartie').modal('hide');
 	nbJoueur = document.getElementById("playernumber").value;
@@ -22,7 +25,6 @@ function initMonopoly(){
 		this.pionVert = new Pion("Vert");
 		x += "<p class=\"pionVert\"></p>";
 	}
-
 	document.getElementById("case1").innerHTML = x;
 	this.gestionnaireDes = new GestionnaireDes();
 	this.gestionnaireTerrain = new gestionnaireTerrain();
@@ -49,10 +51,14 @@ function avancerPion(pion){
 	var x = "<p class=\"pion"+pion.couleur+"\"></p>";
 	html = html.replace(x,"");
 	document.getElementById("case"+pion.position).innerHTML = html;
-	if(pion.position == 40)
+	if(pion.position == 40) {
 		pion.position = 1;
-	else
+		log(pion, "Vous passez par la case Départ et touchez 20000 F");
+		pion.argent += 20000;
+	}
+	else {
 		pion.position++;
+	}
 	document.getElementById("case"+pion.position).innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
 	
 	if(this.nbCase == 1){
@@ -76,7 +82,7 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-		log(pionRouge, nb);
+		log(getPion(numJoueurEnJeu), 'A fait '+nb);
 		getPion(numJoueurEnJeu).deplacerPion(nb);
 	}
 	else
@@ -84,13 +90,10 @@ function melangeDes() {
 }
 
 function actionCase(pion,position) {
-	var Contenu = Fichier('carte_monopoly.json');
-	Contenu = JSON.parse(Contenu);
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
-			//var doc = document.getElementById("modalLoyer");
-			//doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].nom;
 			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("informations-bottom").style.backgroundColor = Contenu.fiches[position].colors[0];
 			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
 			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
 			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
@@ -98,6 +101,7 @@ function actionCase(pion,position) {
 			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
 			document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
 			document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+			document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
 			$('#modalLoyer').modal("show");
 			break;
 		case "chance" :
@@ -115,7 +119,11 @@ function actionCase(pion,position) {
 			$('#modalCarte').modal("show");
 			break;
 		case "taxe" :
-			
+			var doc = document.getElementById("modalCarte");
+			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.fiches[position].nom+". Vous payez "+Contenu.fiches[position].prix;
+			getPion(numJoueurEnJeu).argent = getPion(numJoueurEnJeu).agent-Contenu.fiches[position].prix;
+			$('#modalCarte').modal("show");
 			break;
 		case "special" :
 
@@ -133,12 +141,16 @@ function actionCase(pion,position) {
 			
 			break;
 	}
-	prochainJoueur();
+	//prochainJoueur();
+	document.getElementById('boutonDes').innerHTML = "Fin de tour"
 	document.getElementById('boutonDes').style.visibility = 'visible';
 }
 
 function achat(pion) {
-	log(pion, "test");
+	alert(pion.position-1);
+	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
+	pion.argent -= Contenu.fiches[pion.position-1].prix;
+	log(pion, "Il vous reste "+pion.argent+" F");
 }
 
 function log(pion,texte) {
