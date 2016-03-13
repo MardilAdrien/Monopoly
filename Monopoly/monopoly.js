@@ -26,6 +26,9 @@ function initMonopoly(){
 		x += "<p class=\"pionVert\"></p>";
 	}
 	document.getElementById("case1").innerHTML = x;
+
+	document.getElementById("zoneTexte").innerHTML = "";
+
 	this.gestionnaireDes = new GestionnaireDes();
 	this.gestionnaireTerrain = new gestionnaireTerrain();
 	gestionnaireTerrain.initTerrain();
@@ -54,7 +57,7 @@ function avancerPion(pion){
 	if(pion.position == 40) {
 		pion.position = 1;
 		log(pion, "Vous passez par la case Départ et touchez 20000 F");
-		pion.argent += 20000;
+		pion.argent += parseInt(20000);
 	}
 	else {
 		pion.position++;
@@ -92,25 +95,120 @@ function melangeDes() {
 function actionCase(pion,position) {
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
-			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
-			document.getElementById("propriete-color").style.backgroundColor = Contenu.fiches[position].colors[0];
-			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
-			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
-			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
-			document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
-			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
-			document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
-			document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
-			document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
-			$('#modalLoyer').modal("show");
+			//si on tombe sur une case propriété
+			//si le terrain n'est pas deja acheté
+			if(!gestionnaireTerrain.terrainDejaAcheter(pion.position-1)) {
+				document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+				document.getElementById("propriete-color").style.backgroundColor = Contenu.fiches[position].colors[0];
+				document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
+				document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
+				document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
+				document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
+				document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
+				document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
+				document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+				document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
+				document.getElementById("acheterMaison").style.display = "none";
+				//on n'affiche pas le bouton acheter si pas assez d'argent
+				if(!argentSuffisantAchat()) {
+					document.getElementById("acheterTerrain").style.display = "none";
+				}
+
+				$('#modalLoyer').modal("show");
+			}else {
+				//si le terrain est deja acheté
+				if(pion.couleur == gestionnaireTerrain.lesCases[pion.position-1][1]) {
+					//si le terrain appartient au pion qui est sur la case
+					document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+					document.getElementById("propriete-color").style.backgroundColor = Contenu.fiches[position].colors[0];
+					document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
+					document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
+					document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
+					document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
+					document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
+					document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
+					document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
+					document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
+					document.getElementById("acheterTerrain").style.display = "none";
+
+					if(!argentSuffisantMaison()) {
+						document.getElementById("acheterMaison").style.display = "none";
+					} else {
+						document.getElementById("acheterMaison").style.display = "block";
+					}
+					
+					$('#modalLoyer').modal("show");
+				} else {
+					var doc = document.getElementById("modalPaiement");
+					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[0]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[0])) {
+						$('#modalPaiement').modal("show");
+
+					} else {
+						alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
+						$('#modalPartie').modal("show");
+					}
+				}		
+			}
 			break;
+
 		case "chance" :
-			var doc = document.getElementById("modalCarte");
-			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
-			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[this.nbCarteChance%Contenu.chance.length].nom;
+			alert("carte Chance");
+			if (Contenu.chance[nbCarteChance].type == "taxe") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				if(argentSuffisantPaiement(pion, Contenu.chance[nbCarteChance%Contenu.chance.length].montant)) {
+					pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant);
+					$('#modalCarte').modal("show");
+				} else {
+					alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
+					$('#modalPartie').modal("show");
+				}
+
+			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "goto") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				$('#modalCarte').modal("show");
+				document.getElementById("case"+pion.position).innerHTML = "";
+				document.getElementById("case"+Contenu.chance[nbCarteChance%Contenu.chance.length].pos).innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
+
+			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "birthday") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				$('#modalCarte').modal("show");
+				alert(parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant));
+				pion.argent += (nbJoueur-1)*parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant);
+				// ToDo : retirer l'argent a tout les joueurs sauf le joueur courant.
+
+			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "prime") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				$('#modalCarte').modal("show");
+				pion.argent += parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant);
+
+			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "repair") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				$('#modalCarte').modal("show");
+				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbMaison(pion.couleur);
+
+			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "move") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
+				$('#modalCarte').modal("show");
+				pion.deplacerPion(Contenu.chance[nbCarteChance%Contenu.chance.length].nb);
+			}
+
 			this.nbCarteChance++;
-			$('#modalCarte').modal("show");
 			break;
+
 		case "communaute" :
 			var doc = document.getElementById("modalCarte");
 			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
@@ -118,45 +216,220 @@ function actionCase(pion,position) {
 			this.nbCarteCommunaute++;
 			$('#modalCarte').modal("show");
 			break;
+
 		case "taxe" :
 			var doc = document.getElementById("modalCarte");
-			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
-			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.fiches[position].nom+". Vous payez "+Contenu.fiches[position].prix;
-			getPion(numJoueurEnJeu).argent = getPion(numJoueurEnJeu).agent-Contenu.fiches[position].prix;
-			$('#modalCarte').modal("show");
+			doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+			doc.getElementsByClassName("infoCarte")[0].innerHTML = "Vous devez "+Contenu.fiches[position].prix+" F à la banque.";
+			if(argentSuffisantPaiement(pion, Contenu.fiches[position].prix)) {
+				pion.argent -= parseInt(Contenu.fiches[position].prix);
+				$('#modalCarte').modal("show");
+			} else {
+				alert("Le joueur "+pion.couleur+" n'a plus d'argent pour payer. La partie est donc fini.");
+				$('#modalPartie').modal("show");
+			}
 			break;
+
 		case "special" :
 
 			break;
+
 		case "gare" :
-			document.getElementById("informations-gare").innerHTML = Contenu.fiches[position].nom;
-			document.getElementById("gare-color").style.backgroundColor = Contenu.fiches[position].colors[0];
-			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
-			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
-			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
-			document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
-			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
-			$('#modalGare').modal("show");
+			if(!gestionnaireTerrain.terrainDejaAcheter(pion.position-1)) {
+				document.getElementById("informations-gare").innerHTML = Contenu.fiches[position].nom;
+				document.getElementById("gare-color").style.backgroundColor = Contenu.fiches[position].colors[0];
+				document.getElementById("achat-gare").innerHTML = Contenu.fiches[position].prix;
+				document.getElementById("loyer1-gare").innerHTML = Contenu.fiches[position].loyers[0];
+				document.getElementById("loyer2-gare").innerHTML = Contenu.fiches[position].loyers[1];
+				document.getElementById("loyer3-gare").innerHTML = Contenu.fiches[position].loyers[2];
+				document.getElementById("loyer4-gare").innerHTML = Contenu.fiches[position].loyers[3];
+
+				if(!argentSuffisantAchat()) {
+					document.getElementById("acheterGare").style.visibility = "hidden";
+				}
+				$('#modalGare').modal("show");
+			} else {
+				if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]) {
+					var doc = document.getElementById("modalPaiement");
+					var couleurPionPossedantGare = gestionnaireTerrain.lesCases[pion.position-1][1];
+					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.nbGareDuJoueur(couleurPionPossedantGare)-1]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.nbGareDuJoueur(couleurPionPossedantGare)-1])) {
+						$('#modalPaiement').modal("show");
+
+					} else {
+						alert("Le joueur "+pion.couleur+" n'a plus d'argent pour payer. La partie est donc fini.");
+						initMonopoly();
+					}
+				}
+			}
+
 			break;
+
+		case "compagnie" :
+			if(!gestionnaireTerrain.terrainDejaAcheter(pion.position-1)) {
+				document.getElementById("informations-compagnie").innerHTML = Contenu.fiches[position].nom;
+				document.getElementById("compagnie-color").style.backgroundColor = Contenu.fiches[position].colors[0];
+				document.getElementById("achat-compagnie").innerHTML = Contenu.fiches[position].prix;
+				document.getElementById("loyer1-compagnie").innerHTML = Contenu.fiches[position].loyers[0];
+				document.getElementById("loyer2-compagnie").innerHTML = Contenu.fiches[position].loyers[1];
+
+				if(!argentSuffisantAchat()) {
+					document.getElementById("acheterCompagnie").style.visibility = "hidden";
+				}
+				$('#modalCompagnie').modal("show");
+			} else {
+				if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]) {
+					var doc = document.getElementById("modalPaiement");
+					var couleurPionPossedantCompagnie = gestionnaireTerrain.lesCases[pion.position-1][1];
+					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";				
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1])) {
+						$('#modalPaiement').modal("show");
+					} else {
+						alert("Le joueur "+pion.couleur+" n'a plus d'argent pour payer. La partie est donc fini.");
+						initMonopoly();
+					}
+				}
+			}
+			break;
+
 		case "prison" :
-			
-			break;
+			document.getElementById("case31").innerHTML = "";
+			pion.position = 10;
+			document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
+
+			break;	
 	}
-	//prochainJoueur();
-	document.getElementById('boutonDes').innerHTML = "Fin de tour"
-	document.getElementById('boutonDes').style.visibility = 'visible';
+	if (gestionnaireDes.d1 == gestionnaireDes.d2) {
+		document.getElementById('boutonDes').innerHTML = "Relancer les des";
+		document.getElementById('boutonDes').style.visibility = 'visible';
+	} else {
+		document.getElementById('boutonDes').innerHTML = "Fin de tour";
+		document.getElementById('boutonDes').style.visibility = 'visible';
+	}	
 }
 
-function achat(pion) {
-	alert(pion.position-1);
+function achatTerrain() {
+	var pion = getPion(numJoueurEnJeu);
+	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
 	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
-	pion.argent -= Contenu.fiches[pion.position-1].prix;
+	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
 	log(pion, "Il vous reste "+pion.argent+" F");
+	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
+		
+}
+
+function achatGare() {
+	var pion = getPion(numJoueurEnJeu);
+	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
+	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
+	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
+	log(pion, "Il vous reste "+pion.argent+" F");
+	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
+}
+
+function achatCompagnie() {
+	var pion = getPion(numJoueurEnJeu);
+	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
+	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
+	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
+	log(pion, "Il vous reste "+pion.argent+" F");
+	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
+}
+
+function achatMaison() {
+	var pion = getPion(numJoueurEnJeu);
+	log(pion, "Achete une maison sur "+Contenu.fiches[pion.position-1].nom+" pour "+Contenu.fiches[pion.position-1].prixMaison+" F");
+	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prixMaison);
+	log(pion, "Il vous reste "+pion.argent+" F.");
+	gestionnaireTerrain.lesCases[pion.position-1][2] += 1;
+}
+
+function argentSuffisantAchat() {
+	var pion = getPion(numJoueurEnJeu);
+	if((pion.argent - parseInt(Contenu.fiches[pion.position-1].prix))>0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function argentSuffisantMaison() {
+	var pion = getPion(numJoueurEnJeu);
+	if((pion.argent - parseInt(Contenu.fiches[pion.position-1].prixMaison))>0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function argentSuffisantPaiement(pion, montant) {
+	if (pion.argent - parseInt(montant) > 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function paiementLoyer(pion) {
+	//Récuperation du propriétaire
+	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
+	//Récuperer le loyer du terrain.
+	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
+		alert("gare");
+		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
+	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
+		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
+	} else {
+		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
+	}
+	var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
+
+	//Ajouter l'argent du loyer au proprietaire.
+	switch(proprietaire) {
+		case "Rouge" :
+			alert(pionRouge.argent+" + "+mtnLoyer);
+			pionRouge.argent += mtnLoyer;
+			break;
+		case "Bleu" :
+			pionBleu.argent += mtnLoyer;
+			break;
+		case "Jaune" :
+			pionJaune.argent += mtnLoyer;
+			break;
+		case "Vert" :
+			pionVert.argent += mtnLoyer;
+			break;
+	}
+
+	//Soustraire le loyer au joueur qui est tombé sur la case.
+	pion.argent -= mtnLoyer;
 }
 
 function log(pion,texte) {
 	var nom = "pion"+pion.couleur;
 	document.getElementById("zoneTexte").innerHTML += nom+" : "+texte+"\n";
+}
+
+function getCouleurEN(pion) {
+	switch(pion.couleur) {
+		case "Rouge":
+			return "red";
+			break;
+
+		case "Bleu":
+			return "blue";
+			break;
+
+		case "Vert":
+			return "green";
+			break;
+
+		case "Jaune":
+			return "yellow";
+			break;
+	}
 }
 
 function Fichier(fichier) {

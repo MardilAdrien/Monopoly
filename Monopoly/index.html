@@ -93,15 +93,21 @@
 									Prix des Maisons  F <span id="prixMaison" name="prixMaison"></span><br/>
 									Prix d'un H&ocirc;tel&nbsp; F <span id="prixHotel" name="prixMaison"></span><br/>
 
-								Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+									Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
 								</div>
 							</div>
 						</form>
 					</fieldset>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer" id="acheterTerrain">
 
-					<input type="button" class="btn btn-primary" value="Acheter" onclick="achat(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter" />
+					<input type="button" class="btn btn-primary" value="Acheter" onclick="achatTerrain(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter" />
+					
+					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
+				</div>
+
+				<div class="modal-footer" id="acheterMaison">
+					<input type="button" class="btn btn-primary" value="Acheter maison" onclick="achatMaison(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter maison" />
 					
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
 				</div>
@@ -126,36 +132,76 @@
 							<div id="fiche" class="form-group" style="background-color:white;font-size:12px;text-align:center">
 								<table style="border:1px solid black; margin:auto">
 									<tr><td></td><td>F</td></tr>
-									<tr><td>ACHAT</td><td id="achat" name="achat"></td></tr>
-									<tr><td>LOYER terrain nu</td><td id="loyer0"></td></tr>
-									<tr class="gare"><td> - 1 Gare</td><td id="loyer1" name="loyer1"></td></tr>
-									<tr class="gare"><td> - 2 Gares</td><td id="loyer2" name="loyer2"></td></tr>
-									<tr class="gare"><td> - 3 Gares</td><td id="loyer3" name="loyer3"></td></tr>
-									<tr class="gare"><td> - 4 Gares</td><td id="loyer4" name="loyer4"></td></tr>
+									<tr><td>ACHAT</td><td id="achat-gare" name="achat"></td></tr>
+									<tr class="gare"><td> - 1 Gare</td><td id="loyer1-gare" name="loyer1"></td></tr>
+									<tr class="gare"><td> - 2 Gares</td><td id="loyer2-gare" name="loyer2"></td></tr>
+									<tr class="gare"><td> - 3 Gares</td><td id="loyer3-gare" name="loyer3"></td></tr>
+									<tr class="gare"><td> - 4 Gares</td><td id="loyer4-gare" name="loyer4"></td></tr>
 								</table>
 								<hr/>
 								<div class="infos-group" style="text-align:center">
-									Loyer double si <span style="font-weight:bold">TOUS</span> les terrains du groupe de Couleur.  
+									Loyer double si <span style="font-weight:bold">TOUTES</span> les gares.  
 								</div>
 								<hr/>
-								<div style="text-align:center"> 
-									Prix des Gares  F <span id="prixMaison" name="prixMaison"></span><br/>
-									Prix d'un H&ocirc;tel&nbsp; F <span id="prixHotel" name="prixMaison"></span><br/>
-								Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+								<div style="text-align:center">
+									
+									Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
 								</div>
 							</div>
 						</form>
 					</fieldset>
 				</div>
-				<div class="modal-footer" id="acheter">
-					<input type="button" class="btn btn-primary" value="Acheter terrain" onclick="achat(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter terrain" />
+				<div class="modal-footer" id="acheterGare">
+					<input type="button" class="btn btn-primary" value="Acheter gare" onclick="achatGare();$('#modalGare').modal('hide');" title="Acheter gare" />
 					
-					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalGare').modal('hide');">Refuser</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<!-- Modal Gare -->
+	<div id="modalCompagnie" class="modal fade" role="dialog" > 
+		<div class="modal-dialog" style="width:350px;">
+
+			<!-- Modal content Gare -->
+			<div class="modal-content">
+				<div id="compagnie-color" class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<!-- le h4 servira pour le nom de la gare, ID a recupérer pour le js -->
+					<h4 id="informations-compagnie" class="modal-title" style="font-weight:bold; text-align:center"></h4>
+				</div>
+				<div id="loyer" class="modal-body">
+					<fieldset>
+						<form class="form-horizontal" role="form">
+							<div id="fiche" class="form-group" style="background-color:white;font-size:12px;text-align:center">
+								<table style="border:1px solid black; margin:auto">
+									<tr><td></td><td>F</td></tr>
+									<tr><td>ACHAT</td><td id="achat-compagnie" name="achat"></td></tr>
+									<tr class="compagnie"><td> - 1 Compagnie</td><td id="loyer1-compagnie" name="loyer1"></td></tr>
+									<tr class="compagnie"><td> - 2 Compagnies</td><td id="loyer2-compagnie" name="loyer2"></td></tr>
+								</table>
+								<hr/>
+								<div class="infos-group" style="text-align:center">
+									Loyer double si <span style="font-weight:bold">TOUTES</span> les compagnies  
+								</div>
+								<hr/>
+								<div style="text-align:center">
+									
+									Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+				<div class="modal-footer" id="acheterCompagnie">
+					<input type="button" class="btn btn-primary" value="Acheter compagnie" onclick="achatCompagnie();$('#modalCompagnie').modal('hide');" title="Acheter compagnie" />
+					
+					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalCompagnie').modal('hide');">Refuser</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Modal Carte Chance/Communauté -->
 	<div id="modalCarte" class="modal fade" role="dialog" > 
@@ -182,6 +228,32 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal Paiement -->
+	<div id="modalPaiement" class="modal fade" role="dialog" > 
+		<div class="modal-dialog" style="width:500px; height:350px">
+			<!-- Modal contient Carte Chance / Communauté -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="font-weight:bold; text-align:center;"></h4>
+				</div>
+				<div id="paiement" class="modal-body">
+					<fieldset>
+						<form class="form-horizontal" role="form">
+							<div id="fiche-paiement" class="form-group" style="background-color:white;font-size:12px">
+								<!-- Ici on retrouve l'ID utilisé pour récupérer les infos des cartes Chance -->
+								<div class="info-paiement" style="text-align:center"></div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-primary" value="Payer" onclick="paiementLoyer(getPion(numJoueurEnJeu));$('#modalPaiement').modal('hide');" title="Payer" />
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		$('#modalPartie').modal("show");
 	</script>	
@@ -308,7 +380,15 @@
 										<td class="circle 2 3 4 5 6"></td>
 									</tr>
 								</table>
-								<button id="boutonDes" onclick="if(document.getElementById('boutonDes').innerHTML == 'Lancer des'){gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';}else{prochainJoueur();document.getElementById('boutonDes').innerHTML = 'Lancer des';log(getPion(numJoueurEnJeu),'A vous de jouer.');}">Lancer des</button>	
+								<button id="boutonDes" onclick="if(document.getElementById('boutonDes').innerHTML == 'Lancer des'){
+								gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
+							}else{
+								if(document.getElementById('boutonDes').innerHTML == 'Fin de tour'){
+									prochainJoueur();document.getElementById('boutonDes').innerHTML = 'Lancer des';log(getPion(numJoueurEnJeu),'A vous de jouer.');
+								}else{
+									gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
+								}
+							}">Lancer des</button>	
 								<div id="resultat"></div>
 							</td>
 							<td colspan="3" width="50%" class="emplacement">

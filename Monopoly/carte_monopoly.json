@@ -42,7 +42,7 @@
 		{"type": "propriete","groupe": "Bleu","pos": 40,"nom": "Rue de la Paix","colors": ["#3333FF", "#808EB0"],"prix": 40000,"loyers": [5000, 20000, 60000, 140000, 170000, 200000],"prixMaison": 20000}						
 	],
 	"chance":[
-		{"type":"birthday","nom":"C'est votre anniversaire, chaque joueur vous donne F 1.000","montant":1000},
+		{"type":"birthday","nom":"C'est votre anniversaire, chaque joueur vous donne F 1.000","montant": 1000},
 		{"type":"repair","nom":"Faites des réparations dans toutes vos maisons : F 11.500 par hôtel et F 4.500 par maison","hotel":11500,"maison":4500},
 		{"type":"taxe","nom":"Payer pour frais de scolarité F 15.000","montant":15000},
 		{"type":"taxe","nom":"Amande pour excès de vitesse : F 1.500","montant":1500},
