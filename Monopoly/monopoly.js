@@ -93,7 +93,7 @@ function actionCase(pion,position) {
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
 			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
-			document.getElementById("informations-bottom").style.backgroundColor = Contenu.fiches[position].colors[0];
+			document.getElementById("propriete-color").style.backgroundColor = Contenu.fiches[position].colors[0];
 			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
 			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
 			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
@@ -129,13 +129,14 @@ function actionCase(pion,position) {
 
 			break;
 		case "gare" :
-			document.getElementById("informations-bottom").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("informations-gare").innerHTML = Contenu.fiches[position].nom;
+			document.getElementById("gare-color").style.backgroundColor = Contenu.fiches[position].colors[0];
 			document.getElementById("achat").innerHTML = Contenu.fiches[position].prix;
 			document.getElementById("loyer0").innerHTML = Contenu.fiches[position].loyers[0];
 			document.getElementById("loyer1").innerHTML = Contenu.fiches[position].loyers[1];
 			document.getElementById("loyer2").innerHTML = Contenu.fiches[position].loyers[2];
 			document.getElementById("loyer3").innerHTML = Contenu.fiches[position].loyers[3];
-			$('#modalLoyer').modal("show");
+			$('#modalGare').modal("show");
 			break;
 		case "prison" :
 			
