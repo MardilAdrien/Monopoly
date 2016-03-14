@@ -376,15 +376,7 @@
 										<td class="circle 2 3 4 5 6"></td>
 									</tr>
 								</table>
-								<button id="boutonDes" onclick="if(document.getElementById('boutonDes').innerHTML == 'Lancer des'){
-								gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
-								}else{
-									if(document.getElementById('boutonDes').innerHTML == 'Fin de tour'){
-										prochainJoueur();document.getElementById('boutonDes').innerHTML = 'Lancer des';log(getPion(numJoueurEnJeu),'A vous de jouer.');
-								}else{
-									gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
-								}
-							}">Lancer des</button>	
+								<button id="boutonDes" onclick="jouer();">Lancer des</button>	
 								<div id="resultat"></div>
 							</td>
 							<td colspan="3" width="50%" class="emplacement">

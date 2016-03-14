@@ -5,6 +5,7 @@ function Pion(couleur) {
 	this.position = 1;
     this.couleur = couleur;
     this.argent = 150000;
+    this.prison = 0;
 
 	this.deplacerPion = function (pNbCase){
 		nbCase = pNbCase;

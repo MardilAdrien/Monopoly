@@ -112,8 +112,27 @@ function melangeDes() {
 	if (gestionnaireDes.nombre == 0) {
 		clearInterval(gestionnaireDes.tmp);
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
-		log(getPion(numJoueurEnJeu), 'A fait '+nb);
-		getPion(numJoueurEnJeu).deplacerPion(nb);
+		
+		if(getPion(numJoueurEnJeu).prison == 1) {
+			if(gestionnaireDes.d1 == gestionnaireDes.d2) {				
+				log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');
+				log(getPion(numJoueurEnJeu), 'Vous êtes libéré de prison.');
+
+				var html = document.getElementById("case41").innerHTML;
+				var x = '<p class="pion"'+getPion(numJoueurEnJeu).couleur+'></p>';
+				html = html.replace(x,"");
+
+				getPion(numJoueurEnJeu).prison = 0;
+				getPion(numJoueurEnJeu).deplacerPion(nb);
+				
+			} else {
+				document.getElementById('boutonDes').innerHTML = "Fin de tour";
+				document.getElementById('boutonDes').style.visibility = 'visible';
+			}
+		} else {
+			log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');
+			getPion(numJoueurEnJeu).deplacerPion(nb);
+		}	
 	}
 	else
 		gestionnaireDes.nombre--;				
@@ -219,7 +238,6 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
 				$('#modalCarte').modal("show");
-				alert(parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant));
 				pionRouge.argent -= prix;
 				pionBleu.argent -= prix;
 				if(nbJoueur > 2)
@@ -255,11 +273,36 @@ function actionCase(pion,position) {
 			break;
 
 		case "communaute" :
-			var doc = document.getElementById("modalCarte");
-			doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
-			doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[this.nbCarteCommunaute%Contenu.communaute.length].nom;
+			if (Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].type == "taxe") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;
+				if(argentSuffisantPaiement(pion, Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant)) {
+					pion.argent -= parseInt(Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant);
+					$('#modalCarte').modal("show");
+				} else {
+					alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
+					$('#modalPartie').modal("show");
+				}
+			} else if (Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].type == "prime") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;;
+				$('#modalCarte').modal("show");
+				pion.argent += parseInt(Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant);
+
+			} else if (Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].type == "goto") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;
+				$('#modalCarte').modal("show");
+				document.getElementById("case"+pion.position).innerHTML = "";
+				pion.position = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].pos;
+				document.getElementById("case"+Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].pos).innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
+
+			}
+			
 			this.nbCarteCommunaute++;
-			$('#modalCarte').modal("show");
 			break;
 
 		case "taxe" :
@@ -344,6 +387,7 @@ function actionCase(pion,position) {
 			this.envoyerEnPrison(pion);
 			break;	
 	}
+
 	if (gestionnaireDes.d1 == gestionnaireDes.d2) {
 		if(++gestionnaireDes.nbDouble == 3)
 		{
@@ -363,7 +407,8 @@ function actionCase(pion,position) {
 
 function envoyerEnPrison(pion){
 	document.getElementById("case" + pion.position).innerHTML = "";
-	pion.position = 10;
+	pion.prison = 1;
+	pion.position = 11;
 	document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
 }
 
@@ -446,7 +491,6 @@ function paiementLoyer(pion) {
 	//Ajouter l'argent du loyer au proprietaire.
 	switch(proprietaire) {
 		case "Rouge" :
-			alert(pionRouge.argent+" + "+mtnLoyer);
 			pionRouge.argent += mtnLoyer;
 			break;
 		case "Bleu" :
@@ -488,6 +532,25 @@ function getCouleurEN(pion) {
 		case "Jaune":
 			return "yellow";
 			break;
+	}
+}
+
+function jouer() {
+	if(document.getElementById('boutonDes').innerHTML == 'Lancer des'){
+		gestionnaireDes.lancerDes();
+		document.getElementById('boutonDes').style.visibility = 'hidden';
+	} else {
+		if(document.getElementById('boutonDes').innerHTML == 'Fin de tour'){
+			prochainJoueur();
+			document.getElementById('boutonDes').innerHTML = 'Lancer des';
+			log(getPion(numJoueurEnJeu),'A vous de jouer.');
+			if(getPion(numJoueurEnJeu).prison == 1) {
+				log(getPion(numJoueurEnJeu), 'Vous êtes en prison, il faut faire un double pour sortir de prison.');
+			}
+		}else{
+			gestionnaireDes.lancerDes();
+			document.getElementById('boutonDes').style.visibility = 'hidden';
+		}
 	}
 }
 
