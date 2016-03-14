@@ -1,14 +1,14 @@
 {
-  "name": « Monopoly »,
-  "description": « Jeu de société Monopoly dans sa version original. »,
+  "name": "Monopoly",
+  "description": "Jeu de société Monopoly dans sa version original.",
   "launch_path": "/index.html",
   "icons": {
     "128": "/images/icon-128.png",
-    "512": "/images/icon-512.png »,
-    « 1024 »: « /images/icon-1024.png »
+    "512": "/images/icon-512.png",
+    "1024": "/images/icon-1024.png"
   },
   "developer": {
-    "name": « Maxime BRECHETEAU », « Adrien MARDIL », « Maxime CHAUSSY »
+    "name": "Maxime BRECHETEAU"
   },
   "permissions": {
     "desktop-notification": {
