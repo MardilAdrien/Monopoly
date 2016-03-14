@@ -114,7 +114,7 @@ function melangeDes() {
 		nb = gestionnaireDes.d1+gestionnaireDes.d2;
 		
 		if(getPion(numJoueurEnJeu).prison == 1) {
-			if(gestionnaireDes.d1 == gestionnaireDes.d2) {				
+			if(gestionnaireDes.d1 == gestionnaireDes.d2) {	
 				log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');
 				log(getPion(numJoueurEnJeu), 'Vous êtes libéré de prison.');
 
@@ -140,14 +140,16 @@ function melangeDes() {
 
 function ajouterMaison(position){
 	var classe;
-	if((position > 0 && position < 11)||(position > 20 && position < 31))
+	if((position > 0 && position < 11) || (position > 20 && position < 31)) {
 		classe = "horizontale";
-	else
+	}else{
 		classe = "verticale";
-	if(gestionnaireTerrain.lesCases[position-1][2] < 4)
+	}
+	if(gestionnaireTerrain.lesCases[position-1][2] < 4){
 		document.getElementById("maisonCase"+position).innerHTML += "<div class='maison-"+ classe +"'>&nbsp;</div>";
-	else
+	}else{
 		document.getElementById("maisonCase"+position).innerHTML = "<div class='hotel-"+ classe +"'>&nbsp;</div>";
+	}
 }
 
 function actionCase(pion,position) {
@@ -191,16 +193,21 @@ function actionCase(pion,position) {
 
 					if(!argentSuffisantMaison()) {
 						document.getElementById("acheterMaison").style.display = "none";
-					} else {
+					} else {				
 						document.getElementById("acheterMaison").style.display = "block";
+						if(!argentSuffisantEnsembleMaison()) {
+							document.getElementById("maisonEnsemble").style.display = "none";
+						}else {
+							document.getElementById("maisonEnsemble").style.display = "block";
+						}
 					}
 					
 					$('#modalLoyer').modal("show");
 				} else if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]){
 					var doc = document.getElementById("modalPaiement");
 					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
-					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[0]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
-					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[0])) {
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
 						$('#modalPaiement').modal("show");
 
 					} else {
@@ -253,6 +260,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
 				$('#modalCarte').modal("show");
 				pion.argent += parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].montant);
+				this.majArgent();
 
 			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "repair") {
 				var doc = document.getElementById("modalCarte");
@@ -260,6 +268,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
 				$('#modalCarte').modal("show");
 				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbMaison(pion.couleur);
+				this.majArgent();
 
 			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "move") {
 				var doc = document.getElementById("modalCarte");
@@ -279,6 +288,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;
 				if(argentSuffisantPaiement(pion, Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant)) {
 					pion.argent -= parseInt(Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant);
+					this.majArgent();
 					$('#modalCarte').modal("show");
 				} else {
 					alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
@@ -290,6 +300,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;;
 				$('#modalCarte').modal("show");
 				pion.argent += parseInt(Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].montant);
+				this.majArgent();
 
 			} else if (Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].type == "goto") {
 				var doc = document.getElementById("modalCarte");
@@ -300,8 +311,15 @@ function actionCase(pion,position) {
 				pion.position = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].pos;
 				document.getElementById("case"+Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].pos).innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
 
+			} else if (Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].type == "prison") {
+				var doc = document.getElementById("modalCarte");
+				doc.getElementsByClassName("modal-title")[0].innerHTML = Contenu.fiches[position].type;
+				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.communaute[nbCarteCommunaute%Contenu.communaute.length].nom;
+				$('#modalCarte').modal("show");
+				log(pion, "La carte sortie de prison vous a été attribué, vous pourrez l'utiliser une fois que vous serez en prison.")
+				pion.sortiePrison = 1;
 			}
-			
+
 			this.nbCarteCommunaute++;
 			break;
 
@@ -448,6 +466,20 @@ function achatMaison() {
 	this.majArgent();
 }
 
+function achatMaisonEnsemble() {
+	var pion = getPion(numJoueurEnJeu);
+	liste = gestionnaireTerrain.listeTerrainCouleur(Contenu.fiches[pion.position-1].groupe);
+	for(i=0;i<liste.length;i++) {
+		log(pion, "Achete une maison sur "+Contenu.fiches[liste[i][0]].nom+" pour "+Contenu.fiches[liste[i][0]].prixMaison+" F");
+		var pos = liste[i][0];
+		gestionnaireTerrain.lesCases[pos][2] += 1;
+		this.ajouterMaison(pos+1);
+	}
+
+	pion.argent -= liste.length*parseInt(Contenu.fiches[liste[0][0]].prixMaison);
+	this.majArgent();
+}
+
 function argentSuffisantAchat() {
 	var pion = getPion(numJoueurEnJeu);
 	if((pion.argent - parseInt(Contenu.fiches[pion.position-1].prix))>0){
@@ -466,6 +498,21 @@ function argentSuffisantMaison() {
 	}
 }
 
+function argentSuffisantEnsembleMaison() {
+	var pion = getPion(numJoueurEnJeu);
+	liste = gestionnaireTerrain.listeTerrainCouleur(Contenu.fiches[pion.position-1].groupe);
+	for(i=0;i<liste.length;i++) {
+		log(pion, "Achete une maison sur "+Contenu.fiches[liste[i][0]].nom+" pour "+Contenu.fiches[liste[i][0]].prixMaison+" F");
+		var pos = liste[i][0];
+		gestionnaireTerrain.lesCases[pos][2] += 1;
+	}
+	if(pion.argent > liste.length*parseInt(Contenu.fiches[liste[0][0]].prixMaison)){
+		return true;
+	}else {
+		return false;
+	}
+}
+
 function argentSuffisantPaiement(pion, montant) {
 	if (pion.argent - parseInt(montant) > 0) {
 		return true;
@@ -479,7 +526,6 @@ function paiementLoyer(pion) {
 	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
 	//Récuperer le loyer du terrain.
 	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
-		alert("gare");
 		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
 	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
 		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;

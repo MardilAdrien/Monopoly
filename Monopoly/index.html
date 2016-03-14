@@ -107,7 +107,8 @@
 				</div>
 
 				<div class="modal-footer" id="acheterMaison">
-					<input type="button" class="btn btn-primary" value="Acheter maison" onclick="achatMaison(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter maison" />
+					<input type="button" class="btn btn-primary" id="maisonEnsemble" value="Acheter maison ensemble" onclick="achatMaisonEnsemble();$('#modalLoyer').modal('hide');" title="Acheter une maison pour chaque terrain de cet ensemble" />
+					<input type="button" class="btn btn-primary" value="Acheter maison" onclick="achatMaison();$('#modalLoyer').modal('hide');" title="Acheter maison" />
 					
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
 				</div>

@@ -35,6 +35,16 @@ function gestionnaireTerrain() {
 		else
 			return true;
 	}
+
+	this.listeTerrainCouleur = function (groupe) {
+		listeTerrain = [];
+		for(i = 0; i < this.lesCases.length; i++)
+		{
+			if(this.lesCases[i][0] == groupe)
+				listeTerrain.push([i,this.lesCases[i]]);
+		}
+		return listeTerrain;
+	}
 	
 	this.nbGareDuJoueur = function (pion){
 		nb = 0;
