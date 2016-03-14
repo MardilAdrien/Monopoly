@@ -1,4 +1,5 @@
 function GestionnaireDes(){
+	var nbDouble = 0;
 	var tmp = 0;
 	var nombre = 0;
 	var d1 = 0;

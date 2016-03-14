@@ -94,6 +94,13 @@ display: inline-block;}
 	width:33%;
 }
 
+.argent{
+	text-align:left;
+	padding-left:10%;
+	vertical-align: top;
+	font-size:14px;
+}
+
 .circle {
 	background-color:black;
 	width: 9px;

@@ -20,10 +20,18 @@ function initMonopoly(){
 		this.pionJaune = new Pion("Jaune");
 		x += "<p class=\"pionJaune\"></p>";
 	}
+	else
+	{		
+		document.getElementById('argentJaune').style.display = "none";		
+	}
 	if(nbJoueur > 3)
 	{
 		this.pionVert = new Pion("Vert");
 		x += "<p class=\"pionVert\"></p>";
+	}
+	else
+	{
+		document.getElementById('argentVert').style.display = "none";
 	}
 	document.getElementById("case1").innerHTML = x;
 
@@ -32,10 +40,20 @@ function initMonopoly(){
 	this.gestionnaireDes = new GestionnaireDes();
 	this.gestionnaireTerrain = new gestionnaireTerrain();
 	gestionnaireTerrain.initTerrain();
+	this.majArgent();
 }
 
 function prochainJoueur(){
 	numJoueurEnJeu = (numJoueurEnJeu % nbPion)+1;
+}
+
+function majArgent(){
+	document.getElementById('argentRouge').innerHTML = "Argent Rouge : " + pionRouge.argent.toLocaleString();
+	document.getElementById('argentBleu').innerHTML = "Argent Bleu : " + pionBleu.argent.toLocaleString();
+	if(nbPion > 2)
+			document.getElementById('argentJaune').innerHTML = "Argent Jaune : " + pionJaune.argent.toLocaleString();
+	if(nbPion > 3)
+			document.getElementById('argentVert').innerHTML = "Argent Vert : " + pionVert.argent.toLocaleString();
 }
 
 function getPion(num){
@@ -295,19 +313,30 @@ function actionCase(pion,position) {
 			break;
 
 		case "prison" :
-			document.getElementById("case31").innerHTML = "";
-			pion.position = 10;
-			document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
-
+			this.envoyerEnPrison(pion);
 			break;	
 	}
 	if (gestionnaireDes.d1 == gestionnaireDes.d2) {
-		document.getElementById('boutonDes').innerHTML = "Relancer les des";
-		document.getElementById('boutonDes').style.visibility = 'visible';
+		if(++gestionnaireDes.nbDouble == 3)
+		{
+			this.envoyerEnPrison(getPion(numJoueurEnJeu));
+		}
+		else
+		{
+			document.getElementById('boutonDes').innerHTML = "Relancer les des";
+			document.getElementById('boutonDes').style.visibility = 'visible';
+		}
 	} else {
+		gestionnaireDes.nbDouble = 0;
 		document.getElementById('boutonDes').innerHTML = "Fin de tour";
 		document.getElementById('boutonDes').style.visibility = 'visible';
 	}	
+}
+
+function envoyerEnPrison(pion){
+	document.getElementById("case" + pion.position).innerHTML = "";
+	pion.position = 10;
+	document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
 }
 
 function achatTerrain() {
@@ -315,9 +344,8 @@ function achatTerrain() {
 	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
 	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
 	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
-	log(pion, "Il vous reste "+pion.argent+" F");
 	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
-		
+	this.majArgent();
 }
 
 function achatGare() {
@@ -325,8 +353,8 @@ function achatGare() {
 	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
 	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
 	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
-	log(pion, "Il vous reste "+pion.argent+" F");
 	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
+	this.majArgent();
 }
 
 function achatCompagnie() {
@@ -334,16 +362,16 @@ function achatCompagnie() {
 	document.getElementById("case"+pion.position).style.backgroundColor = getCouleurEN(pion);
 	log(pion, "Achete "+Contenu.fiches[pion.position-1].nom+" "+Contenu.fiches[pion.position-1].prix+" F");
 	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prix);
-	log(pion, "Il vous reste "+pion.argent+" F");
 	gestionnaireTerrain.lesCases[pion.position-1][1] = pion.couleur;
+	this.majArgent();
 }
 
 function achatMaison() {
 	var pion = getPion(numJoueurEnJeu);
 	log(pion, "Achete une maison sur "+Contenu.fiches[pion.position-1].nom+" pour "+Contenu.fiches[pion.position-1].prixMaison+" F");
 	pion.argent -= parseInt(Contenu.fiches[pion.position-1].prixMaison);
-	log(pion, "Il vous reste "+pion.argent+" F.");
 	gestionnaireTerrain.lesCases[pion.position-1][2] += 1;
+	this.majArgent();
 }
 
 function argentSuffisantAchat() {
@@ -405,11 +433,14 @@ function paiementLoyer(pion) {
 
 	//Soustraire le loyer au joueur qui est tombé sur la case.
 	pion.argent -= mtnLoyer;
+	
+	this.majArgent();
 }
 
 function log(pion,texte) {
 	var nom = "pion"+pion.couleur;
 	document.getElementById("zoneTexte").innerHTML += nom+" : "+texte+"\n";
+	document.getElementById("zoneTexte").scrollTop = 99999;
 }
 
 function getCouleurEN(pion) {
