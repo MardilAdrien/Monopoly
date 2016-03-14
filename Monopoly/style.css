@@ -101,6 +101,37 @@ display: inline-block;}
 	font-size:14px;
 }
 
+.maison-horizontale{
+	width:22%;
+	border-style: solid;
+    border-width: 1px;
+	background-color:green;
+}
+
+.maison-verticale{
+	border-style: solid;
+    border-width: 1px;
+	background-color:green;
+}
+
+.hotel-verticale{
+	border-style: solid;
+    border-width: 1px;
+	background-color:red;
+}
+
+.hotel-horizontale{
+	width:30%;
+	border-style: solid;
+    border-width: 1px;
+	background-color:red;
+}
+
+.zoneTexte
+{
+	width:90%;
+}
+
 .circle {
 	background-color:black;
 	width: 9px;

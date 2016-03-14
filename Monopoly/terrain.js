@@ -10,7 +10,7 @@ function gestionnaireTerrain() {
 			else if(i == 22 || i == 24 || i == 25){groupe = "Rouge";}
 			else if(i == 27 || i == 28 || i == 30){groupe = "Jaune";}
 			else if(i == 32 || i == 33 || i == 35){groupe = "Vert";}
-			else if(i == 38 || i == 40){groupe = "Bleu Foncé";}
+			else if(i == 38 || i == 40){groupe = "Bleu";}
 			else if(i == 6 || i == 16 || i == 26 || i == 36){groupe = "Gare";}
 			else if(i == 13 || i == 29){groupe = "Compagnie";}
 			else {groupe = "";}

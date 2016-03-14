@@ -93,7 +93,7 @@
 									Prix des Maisons  F <span id="prixMaison" name="prixMaison"></span><br/>
 									Prix d'un H&ocirc;tel&nbsp; F <span id="prixHotel" name="prixMaison"></span><br/>
 
-									Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+									Valeur hypotécaire : F <span id="hypotheque" name="montantHypotheque"></span>
 								</div>
 							</div>
 						</form>
@@ -139,13 +139,9 @@
 									<tr class="gare"><td> - 4 Gares</td><td id="loyer4-gare" name="loyer4"></td></tr>
 								</table>
 								<hr/>
-								<div class="infos-group" style="text-align:center">
-									Loyer double si <span style="font-weight:bold">TOUTES</span> les gares.  
-								</div>
-								<hr/>
 								<div style="text-align:center">
 									
-									Valeur hypotécaire : Frs <span id="hypotheque" name="montantHypotheque"></span>
+									Valeur hypotécaire : 10 000 F <span id="hypotheque" name="montantHypotheque"></span>
 								</div>
 							</div>
 						</form>
@@ -183,7 +179,7 @@
 								</table>
 								<hr/>
 								<div class="infos-group" style="text-align:center">
-									Loyer double si <span style="font-weight:bold">TOUTES</span> les compagnies  
+									Multiplier par le résultat des dès du joueur.  
 								</div>
 								<hr/>
 								<div style="text-align:center">
@@ -324,15 +320,15 @@
 				</td> 
 			</tr> 
 			 <tr align="center"> 
-				 <td class="couleurHorizontale" bgcolor="#993399"></td> 
+				 <td class="couleurHorizontale" bgcolor="#993399" id="maisonCase2"></td> 
 				 <td class="couleurHorizontale" bgcolor=""></td> 
-				 <td class="couleurHorizontale" bgcolor="#993399"></td> 
+				 <td class="couleurHorizontale" bgcolor="#993399" id="maisonCase4"></td> 
 				 <td class="couleurHorizontale" bgcolor=""></td> 
 				 <td class="couleurHorizontale" bgcolor="747274"></td> 
-				 <td class="couleurHorizontale" bgcolor="#AACCFF"></td> 
+				 <td class="couleurHorizontale" bgcolor="#AACCFF" id="maisonCase7"></td> 
 				 <td class="couleurHorizontale" bgcolor=""></td> 
-				 <td class="couleurHorizontale" bgcolor="#AACCFF"></td> 
-				 <td class="couleurHorizontale" bgcolor="#AACCFF"></td> 
+				 <td class="couleurHorizontale" bgcolor="#AACCFF" id="maisonCase9"></td> 
+				 <td class="couleurHorizontale" bgcolor="#AACCFF" id="maisonCase10"></td> 
 			 </tr> 
 			 <tr align="center"> 
 				 <td colspan="2" class="caseVerticale">
@@ -340,7 +336,7 @@
 					<div class="pion" id="case40"></div>
 					<br /> 40 000 F
 				</td> 
-				 <td class="couleurVerticale" bgcolor="#3333FF">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#3333FF" id="maisonCase40"></td> 
 				 <td rowspan="9" colspan="9" style="border:1px solid black;font-size:xx-large">	
 					<table border="0">
 						<tr>
@@ -382,9 +378,9 @@
 								</table>
 								<button id="boutonDes" onclick="if(document.getElementById('boutonDes').innerHTML == 'Lancer des'){
 								gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
-							}else{
-								if(document.getElementById('boutonDes').innerHTML == 'Fin de tour'){
-									prochainJoueur();document.getElementById('boutonDes').innerHTML = 'Lancer des';log(getPion(numJoueurEnJeu),'A vous de jouer.');
+								}else{
+									if(document.getElementById('boutonDes').innerHTML == 'Fin de tour'){
+										prochainJoueur();document.getElementById('boutonDes').innerHTML = 'Lancer des';log(getPion(numJoueurEnJeu),'A vous de jouer.');
 								}else{
 									gestionnaireDes.lancerDes();document.getElementById('boutonDes').style.visibility = 'hidden';
 								}
@@ -405,18 +401,18 @@
 						</tr>
 						<tr>
 							<td colspan="1" class="argent">
-								<p id="argentRouge">Argent Rouge : </p>
-								<p id="argentBleu">Argent Bleu : </p>
-								<p id="argentJaune">Argent Jaune : </p>
-								<p id="argentVert">Argent Vert : </p>
+								<p id="argentRouge"></p>
+								<p id="argentBleu"></p>
+								<p id="argentJaune"></p>
+								<p id="argentVert"></p>
 							</td>
 							<td colspan="6" class="emplacement" style="padding-bottom:2%;">
-								<textarea rows="6" cols="75	" id="zoneTexte"></textarea>
+								<textarea rows="6" cols="75	" id="zoneTexte" class="zoneTexte" readonly="readonly"></textarea>
 							</td>
 						</tr>
 					</table>
 				</td> 
-				 <td class="couleurVerticale" bgcolor="#EE44DD">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#EE44DD" id="maisonCase12"></td> 
 				 <td colspan="2" class="caseVerticale">
 						Bd de la Villette
 						<div class="pion" id="case12"></div>
@@ -443,8 +439,8 @@
 					<div class="pion" id="case38"></div>
 					<br />35 000 F
 				 </td> 
-				 <td class="couleurVerticale" bgcolor="#3333FF">&#160;</td> 
-				 <td class="couleurVerticale" bgcolor="#EE44DD">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#3333FF" id="maisonCase38"></td> 
+				 <td class="couleurVerticale" bgcolor="#EE44DD" id="maisonCase14"></td> 
 				 <td colspan="2" class="caseVerticale">
 					Avenue de Neuilly
 					<div class="pion" id="case14"></div>
@@ -457,7 +453,7 @@
 					<div class="pion" id="case37"></div>
 				 </td> 
 				 <td class="couleurVerticale" bgcolor="">&#160;</td> 
-				 <td class="couleurVerticale" bgcolor="#EE44DD">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#EE44DD" id="maisonCase15"></td> 
 				 <td colspan="2" class="caseVerticale">
 					Rue de Paradis
 					<div class="pion" id="case15"></div>
@@ -484,8 +480,8 @@
 					<div class="pion" id="case35"></div>
 					<br />32 000 F
 				 </td>
-				 <td class="couleurVerticale" bgcolor="#008000">&#160;</td> 
-				 <td class="couleurVerticale" bgcolor="#FF6600">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#008000" id="maisonCase35"></td> 
+				 <td class="couleurVerticale" bgcolor="#FF6600" id="maisonCase17"></td> 
 				 <td colspan="2" class="caseVerticale">
 					Avenue Mozart
 					<div class="pion" id="case17"></div>
@@ -511,8 +507,8 @@
 					<div class="pion" id="case33"></div>
 					<br />30 000 F
 				</td> 
-				<td class="couleurVerticale" bgcolor="#008000">&#160;</td> 
-				<td class="couleurVerticale" bgcolor="#FF6600">&#160;</td> 
+				<td class="couleurVerticale" bgcolor="#008000" id="maisonCase33"></td> 
+				<td class="couleurVerticale" bgcolor="#FF6600" id="maisonCase19"></td> 
 				<td colspan="2" class="caseVerticale">
 					Bd Saint-Michel
 					<div class="pion" id="case19"></div>
@@ -525,8 +521,8 @@
 					<div class="pion" id="case32"></div>
 					<br />30 000 F
 				</td> 
-				 <td class="couleurVerticale" bgcolor="#008000">&#160;</td> 
-				 <td class="couleurVerticale" bgcolor="#FF6600">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#008000" id="maisonCase32">&#160;</td> 
+				 <td class="couleurVerticale" bgcolor="#FF6600" id="maisonCase20">&#160;</td> 
 				 <td colspan="2" class="caseVerticale">
 					Place Pigalle
 					<div class="pion" id="case20"></div>
@@ -538,15 +534,15 @@
 					ALLEZ EN PRISON
 					<div class="pion" id="case31"></div>
 				 </td> 
-				 <td  bgcolor="#FFFF00" class="couleurHorizontale">&#160;</td> 
+				 <td  bgcolor="#FFFF00" class="couleurHorizontale" id="maisonCase30">&#160;</td> 
 				 <td  bgcolor="#A9F5A9" class="couleurHorizontale">&#160;</td> 
-				 <td  bgcolor="#FFFF00" class="couleurHorizontale">&#160;</td> 
-				 <td  bgcolor="#FFFF00" class="couleurHorizontale">&#160;</td> 
+				 <td  bgcolor="#FFFF00" class="couleurHorizontale" id="maisonCase28">&#160;</td> 
+				 <td  bgcolor="#FFFF00" class="couleurHorizontale" id="maisonCase27">&#160;</td> 
 				 <td  bgcolor="747274" class="couleurHorizontale">&#160;</td> 			 
-				 <td  bgcolor="#FF0000" class="couleurHorizontale">&#160;</td> 
-				 <td  bgcolor="#FF0000" class="couleurHorizontale">&#160;</td> 
+				 <td  bgcolor="#FF0000" class="couleurHorizontale" id="maisonCase25">&#160;</td> 
+				 <td  bgcolor="#FF0000" class="couleurHorizontale" id="maisonCase24">&#160;</td> 
 				 <td  bgcolor="" class="couleurHorizontale">&#160;</td> 				 
-				 <td  bgcolor="#FF0000" class="couleurHorizontale">&#160;</td> 
+				 <td  bgcolor="#FF0000" class="couleurHorizontale" id="maisonCase22">&#160;</td> 
 				 <td class="caseBord" rowspan="2" colspan="3">
 					PARC GRATUIT
 					<div class="pion" id="case21"></div>
