@@ -260,7 +260,6 @@ function actionCase(pion,position) {
 				} else if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]){
 					var doc = document.getElementById("modalPaiement");
 					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
-					alert(Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position][2]]);
 					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
 					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
 						$('#modalPaiement').modal("show");
@@ -392,10 +391,6 @@ function actionCase(pion,position) {
 			}
 			break;
 
-		case "special" :
-
-			break;
-
 		case "gare" :
 			if(!gestionnaireTerrain.terrainDejaAcheter(pion.position-1)) {
 				document.getElementById("informations-gare").innerHTML = Contenu.fiches[position].nom;
@@ -444,8 +439,9 @@ function actionCase(pion,position) {
 				if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]) {
 					var doc = document.getElementById("modalPaiement");
 					var couleurPionPossedantCompagnie = gestionnaireTerrain.lesCases[pion.position-1][1];
-					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";				
-					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+					var mtn = parseInt(Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1]) * (gestionnaireDes.d1 + gestionnaireDes.d2);
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+mtn+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
 					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1])) {
 						$('#modalPaiement').modal("show");
 					} else {
@@ -563,17 +559,23 @@ function argentSuffisantPaiement(pion, montant) {
 }
 
 function paiementLoyer(pion) {
+
+	var doc = document.getElementById("modalPaiement");
 	//Récuperation du propriétaire
 	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
 	//Récuperer le loyer du terrain.
+	var mtnLoyer = 0;
 	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
 		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
+		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
 	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
+		var couleurPionPossedantCompagnie = gestionnaireTerrain.lesCases[pion.position-1][1];
 		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
+		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]) * (gestionnaireDes.d1 + gestionnaireDes.d2);
 	} else {
 		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
+		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
 	}
-	var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
 	//Ajouter l'argent du loyer au proprietaire.
 	switch(proprietaire) {
 		case "Rouge" :
