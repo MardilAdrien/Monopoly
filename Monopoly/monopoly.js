@@ -78,7 +78,12 @@ function avancerPion(pion){
 		pion.argent += parseInt(20000);
 		this.majArgent();
 	}
-	else {
+	else if(pion.position == 41)
+	{
+		pion.position = 12;
+	}		
+	else
+	{
 		if(this.nbCase <= 0)
 			pion.position--;
 		else
@@ -96,6 +101,25 @@ function avancerPion(pion){
 		actionCase(pion,pion.position-1);
 	}
 
+}
+
+function sortirPrisonAvecCarte(){
+	pion = getPion(numJoueurEnJeu);
+	pion.prison = 0;
+	pion.nbTourEnPrison = 0;
+	pion.sortiePrison--;
+	log(pion,"A utiliser sa carte sortie de prison.")
+}
+
+function sortirPrisonAvecPaiement(){
+	pion = getPion(numJoueurEnJeu);
+	pion.prison = 0;
+	pion.nbTourEnPrison = 0;
+	pion.argent-=5000;
+	majArgent();
+	log(pion,"A payé 5 000 F pour sortir de prison.")
+	document.getElementById('boutonDes').innerHTML = "Fin de tour";
+	document.getElementById('boutonDes').style.visibility = 'visible';
 }
 
 function melangeDes() {
@@ -126,12 +150,41 @@ function melangeDes() {
 				getPion(numJoueurEnJeu).deplacerPion(nb);
 				
 			} else {
+				pion = getPion(numJoueurEnJeu);
+				pion.nbTourEnPrison++;
 				document.getElementById('boutonDes').innerHTML = "Fin de tour";
 				document.getElementById('boutonDes').style.visibility = 'visible';
+				if(pion.nbTourEnPrison == 3){
+					pion.nbTourEnPrison = 0;
+					pion.prison = 0;
+					pion.argent-=5000;
+					majArgent();
+					log(pion,"A du payer 5 000 F pour sortir de prison");
+				}
 			}
 		} else {
-			log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');
-			getPion(numJoueurEnJeu).deplacerPion(nb);
+			var deplacer = true;
+			log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');			
+			if (gestionnaireDes.d1 == gestionnaireDes.d2) {
+				if(++gestionnaireDes.nbDouble == 3)
+				{
+					this.envoyerEnPrison(getPion(numJoueurEnJeu));
+					alert("Vous avez fait 3 doubles. Allez en prison, ne passez pas par la case départ, ne touchez pas 20 000 F");
+					deplacer = false;
+				}
+				else
+				{
+					document.getElementById('boutonDes').innerHTML = "Relancer les des";
+					document.getElementById('boutonDes').style.visibility = 'visible';
+				}
+			} 
+			else {
+				gestionnaireDes.nbDouble = 0;
+				document.getElementById('boutonDes').innerHTML = "Fin de tour";
+				document.getElementById('boutonDes').style.visibility = 'visible';
+			}	
+			if(deplacer)
+				getPion(numJoueurEnJeu).deplacerPion(nb);
 		}	
 	}
 	else
@@ -152,7 +205,7 @@ function ajouterMaison(position){
 	}
 }
 
-function actionCase(pion,position) {
+function actionCase(pion,position) {	
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
 			//si on tombe sur une case propriété
@@ -405,31 +458,19 @@ function actionCase(pion,position) {
 
 		case "prison" :
 			this.envoyerEnPrison(pion);
+			alert("Allez en prison, ne passez pas par la case départ, ne touchez pas 20 000 F");
 			break;	
 	}
-
-	if (gestionnaireDes.d1 == gestionnaireDes.d2) {
-		if(++gestionnaireDes.nbDouble == 3)
-		{
-			this.envoyerEnPrison(getPion(numJoueurEnJeu));
-		}
-		else
-		{
-			document.getElementById('boutonDes').innerHTML = "Relancer les des";
-			document.getElementById('boutonDes').style.visibility = 'visible';
-		}
-	} else {
-		gestionnaireDes.nbDouble = 0;
-		document.getElementById('boutonDes').innerHTML = "Fin de tour";
-		document.getElementById('boutonDes').style.visibility = 'visible';
-	}	
 }
 
 function envoyerEnPrison(pion){
 	document.getElementById("case" + pion.position).innerHTML = "";
 	pion.prison = 1;
-	pion.position = 11;
+	pion.position = 41;
 	document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
+	document.getElementById('boutonDes').innerHTML = "Fin de tour";
+	document.getElementById('boutonDes').style.visibility = 'visible';
+	log(pion,"Vous allez en prison");
 }
 
 function achatTerrain() {
@@ -587,8 +628,14 @@ function jouer() {
 			prochainJoueur();
 			document.getElementById('boutonDes').innerHTML = 'Lancer des';
 			log(getPion(numJoueurEnJeu),'A vous de jouer.');
-			if(getPion(numJoueurEnJeu).prison == 1) {
-				log(getPion(numJoueurEnJeu), 'Vous êtes en prison, il faut faire un double pour sortir de prison.');
+			if(getPion(numJoueurEnJeu).prison == 1) {	
+				if(getPion(numJoueurEnJeu).sortiePrison == 1){
+					document.getElementById("btnPrisonCarte").style.display = "block";
+				}
+				else{
+					document.getElementById("btnPrisonCarte").style.display = "none";
+				}
+				$('#modalPrison').modal('show');
 			}
 		}else{
 			gestionnaireDes.lancerDes();

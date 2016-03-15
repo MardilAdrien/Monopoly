@@ -250,6 +250,35 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Modal Prison -->
+	<div id="modalPrison" class="modal fade" role="dialog" > 
+		<div class="modal-dialog" style="width:500px; height:350px">
+			<!-- Modal contient Carte Chance / Communauté -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="font-weight:bold; text-align:center;">En Prison</h4>
+				</div>
+				<div id="prison" class="modal-body">
+					<fieldset>
+						<form class="form-horizontal" role="form">
+							<div id="fiche-prison" class="form-group" style="background-color:white;font-size:12px">
+								<!-- Ici on retrouve l'ID utilisé pour récupérer les infos des cartes Chance -->
+								<div class="info-prison" style="text-align:center">
+									Vous êtes en prison. Payez 5 000 F pour sortir au prochain tour, utilisez une carte liberer de prison ou tentez un double pour sortir immédiatement.
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-primary" value="Lancer Des" onclick="jouer();$('#modalPrison').modal('hide');" title="Lancer Des" />
+					<input type="button" class="btn btn-primary" value="Payer" onclick="sortirPrisonAvecPaiement();$('#modalPrison').modal('hide');" title="Payer" />
+					<input id="btnPrisonCarte" name="btnPrisonCarte" type="button" class="btn btn-primary" value="Utiliser Carte" onclick="sortirPrisonAvecCarte();$('#modalPrison').modal('hide');" title="Utiliser Carte" />
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<script>
 		$('#modalPartie').modal("show");
