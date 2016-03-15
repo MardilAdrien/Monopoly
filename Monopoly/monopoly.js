@@ -66,6 +66,17 @@ function getPion(num){
 	if(num == 4)
 		return pionVert;
 }
+
+function getPionFromCouleur(color){
+	if(color == "Rouge")
+		return pionRouge;
+	if(color == "Bleu")
+		return pionBleu;
+	if(color == "Jaune")
+		return pionJaune;
+	if(color == "Vert")
+		return pionVert;
+}
 	
 function avancerPion(pion){
 	var html = document.getElementById("case"+pion.position).innerHTML;
@@ -255,19 +266,21 @@ function actionCase(pion,position) {
 							document.getElementById("maisonEnsemble").style.display = "block";
 						}
 					}
-					
 					$('#modalLoyer').modal("show");
+					
 				} else if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]){
-					var doc = document.getElementById("modalPaiement");
-					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
-					alert(Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position][2]]);
-					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
-					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
-						$('#modalPaiement').modal("show");
+					if(getPionFromCouleur(gestionnaireTerrain.lesCases[position-1][1]).prison != 1)
+					{
+						var doc = document.getElementById("modalPaiement");
+						doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+						doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+						if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
+							$('#modalPaiement').modal("show");
 
-					} else {
-						alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
-						$('#modalPartie').modal("show");
+						} else {
+							alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
+							$('#modalPartie').modal("show");
+						}
 					}
 				}		
 			}
@@ -323,6 +336,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
 				$('#modalCarte').modal("show");
 				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbMaison(pion.couleur);
+				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbHotel(pion.couleur);
 				this.majArgent();
 
 			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "move") {
@@ -563,35 +577,35 @@ function argentSuffisantPaiement(pion, montant) {
 }
 
 function paiementLoyer(pion) {
-	//Récuperation du propriétaire
-	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
-	//Récuperer le loyer du terrain.
-	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
-		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
-	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
-		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
-	} else {
-		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
-	}
-	var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
-	//Ajouter l'argent du loyer au proprietaire.
-	switch(proprietaire) {
-		case "Rouge" :
-			pionRouge.argent += mtnLoyer;
-			break;
-		case "Bleu" :
-			pionBleu.argent += mtnLoyer;
-			break;
-		case "Jaune" :
-			pionJaune.argent += mtnLoyer;
-			break;
-		case "Vert" :
-			pionVert.argent += mtnLoyer;
-			break;
-	}
-	//Soustraire le loyer au joueur qui est tombé sur la case.
-	pion.argent -= mtnLoyer;
-	this.majArgent();
+		var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
+		//Récuperation du propriétaire
+		//Récuperer le loyer du terrain.
+		if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
+			var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
+		}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
+			var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
+		} else {
+			var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
+		}
+		var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
+		//Ajouter l'argent du loyer au proprietaire.
+		switch(proprietaire) {
+			case "Rouge" :
+				pionRouge.argent += mtnLoyer;
+				break;
+			case "Bleu" :
+				pionBleu.argent += mtnLoyer;
+				break;
+			case "Jaune" :
+				pionJaune.argent += mtnLoyer;
+				break;
+			case "Vert" :
+				pionVert.argent += mtnLoyer;
+				break;
+		}
+		//Soustraire le loyer au joueur qui est tombé sur la case.
+		pion.argent -= mtnLoyer;
+		this.majArgent();
 }
 
 function log(pion,texte) {
