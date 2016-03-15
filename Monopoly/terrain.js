@@ -15,7 +15,7 @@ function gestionnaireTerrain() {
 			else if(i == 13 || i == 29){groupe = "Compagnie";}
 			else {groupe = "";}
 			// lesCases[Position] [Nom du groupe | couleur du joueur | nbMaison] -> gestionnaireTerrain.lesCases
-			this.lesCases.push([groupe,"",0]);
+			this.lesCases.push([groupe,"Rouge",0]);
 		}	
 	}
 	
@@ -70,9 +70,21 @@ function gestionnaireTerrain() {
 		nb = 0;
 		for(i = 0; i < 40; i++) {
 			if(this.lesCases[i][1] == pion)
-				nb += this.lesCases[i][2];
+			{
+				if(this.lesCases[i][2] < 5)
+					nb += this.lesCases[i][2] ;
+			}
 		}
 		return nb;
 	}
-
+	
+	this.nbHotel = function(pion) {
+		nb = 0;
+		for(i = 0; i < 40; i++) {
+			if(this.lesCases[i][1] == pion)
+				if(this.lesCases[i][2] == 5)
+					nb += 1;
+		}
+		return nb;
+	}
 }

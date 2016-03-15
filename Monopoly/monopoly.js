@@ -66,6 +66,17 @@ function getPion(num){
 	if(num == 4)
 		return pionVert;
 }
+
+function getPionFromCouleur(color){
+	if(color == "Rouge")
+		return pionRouge;
+	if(color == "Bleu")
+		return pionBleu;
+	if(color == "Jaune")
+		return pionJaune;
+	if(color == "Vert")
+		return pionVert;
+}
 	
 function avancerPion(pion){
 	var html = document.getElementById("case"+pion.position).innerHTML;
@@ -78,7 +89,12 @@ function avancerPion(pion){
 		pion.argent += parseInt(20000);
 		this.majArgent();
 	}
-	else {
+	else if(pion.position == 41)
+	{
+		pion.position = 12;
+	}		
+	else
+	{
 		if(this.nbCase <= 0)
 			pion.position--;
 		else
@@ -96,6 +112,25 @@ function avancerPion(pion){
 		actionCase(pion,pion.position-1);
 	}
 
+}
+
+function sortirPrisonAvecCarte(){
+	pion = getPion(numJoueurEnJeu);
+	pion.prison = 0;
+	pion.nbTourEnPrison = 0;
+	pion.sortiePrison--;
+	log(pion,"A utiliser sa carte sortie de prison.")
+}
+
+function sortirPrisonAvecPaiement(){
+	pion = getPion(numJoueurEnJeu);
+	pion.prison = 0;
+	pion.nbTourEnPrison = 0;
+	pion.argent-=5000;
+	majArgent();
+	log(pion,"A payé 5 000 F pour sortir de prison.")
+	document.getElementById('boutonDes').innerHTML = "Fin de tour";
+	document.getElementById('boutonDes').style.visibility = 'visible';
 }
 
 function melangeDes() {
@@ -126,12 +161,41 @@ function melangeDes() {
 				getPion(numJoueurEnJeu).deplacerPion(nb);
 				
 			} else {
+				pion = getPion(numJoueurEnJeu);
+				pion.nbTourEnPrison++;
 				document.getElementById('boutonDes').innerHTML = "Fin de tour";
 				document.getElementById('boutonDes').style.visibility = 'visible';
+				if(pion.nbTourEnPrison == 3){
+					pion.nbTourEnPrison = 0;
+					pion.prison = 0;
+					pion.argent-=5000;
+					majArgent();
+					log(pion,"A du payer 5 000 F pour sortir de prison");
+				}
 			}
 		} else {
-			log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');
-			getPion(numJoueurEnJeu).deplacerPion(nb);
+			var deplacer = true;
+			log(getPion(numJoueurEnJeu), 'A fait '+nb+'.');			
+			if (gestionnaireDes.d1 == gestionnaireDes.d2) {
+				if(++gestionnaireDes.nbDouble == 3)
+				{
+					this.envoyerEnPrison(getPion(numJoueurEnJeu));
+					alert("Vous avez fait 3 doubles. Allez en prison, ne passez pas par la case départ, ne touchez pas 20 000 F");
+					deplacer = false;
+				}
+				else
+				{
+					document.getElementById('boutonDes').innerHTML = "Relancer les des";
+					document.getElementById('boutonDes').style.visibility = 'visible';
+				}
+			} 
+			else {
+				gestionnaireDes.nbDouble = 0;
+				document.getElementById('boutonDes').innerHTML = "Fin de tour";
+				document.getElementById('boutonDes').style.visibility = 'visible';
+			}	
+			if(deplacer)
+				getPion(numJoueurEnJeu).deplacerPion(nb);
 		}	
 	}
 	else
@@ -145,14 +209,14 @@ function ajouterMaison(position){
 	}else{
 		classe = "verticale";
 	}
-	if(gestionnaireTerrain.lesCases[position-1][2] < 4){
+	if(gestionnaireTerrain.lesCases[position-1][2] <= 4){
 		document.getElementById("maisonCase"+position).innerHTML += "<div class='maison-"+ classe +"'>&nbsp;</div>";
 	}else{
 		document.getElementById("maisonCase"+position).innerHTML = "<div class='hotel-"+ classe +"'>&nbsp;</div>";
 	}
 }
 
-function actionCase(pion,position) {
+function actionCase(pion,position) {	
 	switch(Contenu.fiches[position].type) {
 		case "propriete" :
 			//si on tombe sur une case propriété
@@ -193,6 +257,7 @@ function actionCase(pion,position) {
 
 					if(!argentSuffisantMaison()) {
 						document.getElementById("acheterMaison").style.display = "none";
+						document.getElementById("maisonEnsemble").style.display = "none";
 					} else {				
 						document.getElementById("acheterMaison").style.display = "block";
 						if(!argentSuffisantEnsembleMaison()) {
@@ -201,18 +266,21 @@ function actionCase(pion,position) {
 							document.getElementById("maisonEnsemble").style.display = "block";
 						}
 					}
-					
 					$('#modalLoyer').modal("show");
+					
 				} else if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]){
-					var doc = document.getElementById("modalPaiement");
-					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
-					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
-					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
-						$('#modalPaiement').modal("show");
+					if(getPionFromCouleur(gestionnaireTerrain.lesCases[position-1][1]).prison != 1)
+					{
+						var doc = document.getElementById("modalPaiement");
+						doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+						doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+						if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
+							$('#modalPaiement').modal("show");
 
-					} else {
-						alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
-						$('#modalPartie').modal("show");
+						} else {
+							alert("Le joueur "+pion.couleur+" n'a plus d'argent. La partie est donc fini.");
+							$('#modalPartie').modal("show");
+						}
 					}
 				}		
 			}
@@ -268,6 +336,7 @@ function actionCase(pion,position) {
 				doc.getElementsByClassName("infoCarte")[0].innerHTML = Contenu.chance[nbCarteChance%Contenu.chance.length].nom;
 				$('#modalCarte').modal("show");
 				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbMaison(pion.couleur);
+				pion.argent -= parseInt(Contenu.chance[nbCarteChance%Contenu.chance.length].maison)*gestionnaireTerrain.nbHotel(pion.couleur);
 				this.majArgent();
 
 			} else if (Contenu.chance[nbCarteChance%Contenu.chance.length].type == "move") {
@@ -337,10 +406,6 @@ function actionCase(pion,position) {
 			}
 			break;
 
-		case "special" :
-
-			break;
-
 		case "gare" :
 			if(!gestionnaireTerrain.terrainDejaAcheter(pion.position-1)) {
 				document.getElementById("informations-gare").innerHTML = Contenu.fiches[position].nom;
@@ -389,8 +454,9 @@ function actionCase(pion,position) {
 				if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]) {
 					var doc = document.getElementById("modalPaiement");
 					var couleurPionPossedantCompagnie = gestionnaireTerrain.lesCases[pion.position-1][1];
-					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";				
-					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+					var mtn = parseInt(Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1]) * (gestionnaireDes.d1 + gestionnaireDes.d2);
+					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+mtn+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
 					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.nbCompagnieDuJoueur(couleurPionPossedantCompagnie)-1])) {
 						$('#modalPaiement').modal("show");
 					} else {
@@ -403,31 +469,19 @@ function actionCase(pion,position) {
 
 		case "prison" :
 			this.envoyerEnPrison(pion);
+			alert("Allez en prison, ne passez pas par la case départ, ne touchez pas 20 000 F");
 			break;	
 	}
-
-	if (gestionnaireDes.d1 == gestionnaireDes.d2) {
-		if(++gestionnaireDes.nbDouble == 3)
-		{
-			this.envoyerEnPrison(getPion(numJoueurEnJeu));
-		}
-		else
-		{
-			document.getElementById('boutonDes').innerHTML = "Relancer les des";
-			document.getElementById('boutonDes').style.visibility = 'visible';
-		}
-	} else {
-		gestionnaireDes.nbDouble = 0;
-		document.getElementById('boutonDes').innerHTML = "Fin de tour";
-		document.getElementById('boutonDes').style.visibility = 'visible';
-	}	
 }
 
 function envoyerEnPrison(pion){
 	document.getElementById("case" + pion.position).innerHTML = "";
 	pion.prison = 1;
-	pion.position = 11;
+	pion.position = 41;
 	document.getElementById("case41").innerHTML += "<p class=\"pion"+pion.couleur+"\"></p>";
+	document.getElementById('boutonDes').innerHTML = "Fin de tour";
+	document.getElementById('boutonDes').style.visibility = 'visible';
+	log(pion,"Vous allez en prison");
 }
 
 function achatTerrain() {
@@ -502,9 +556,7 @@ function argentSuffisantEnsembleMaison() {
 	var pion = getPion(numJoueurEnJeu);
 	liste = gestionnaireTerrain.listeTerrainCouleur(Contenu.fiches[pion.position-1].groupe);
 	for(i=0;i<liste.length;i++) {
-		log(pion, "Achete une maison sur "+Contenu.fiches[liste[i][0]].nom+" pour "+Contenu.fiches[liste[i][0]].prixMaison+" F");
 		var pos = liste[i][0];
-		gestionnaireTerrain.lesCases[pos][2] += 1;
 	}
 	if(pion.argent > liste.length*parseInt(Contenu.fiches[liste[0][0]].prixMaison)){
 		return true;
@@ -522,38 +574,35 @@ function argentSuffisantPaiement(pion, montant) {
 }
 
 function paiementLoyer(pion) {
-	//Récuperation du propriétaire
-	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
-	//Récuperer le loyer du terrain.
-	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
-		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
-	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
-		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
-	} else {
-		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
-	}
-	var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
-
-	//Ajouter l'argent du loyer au proprietaire.
-	switch(proprietaire) {
-		case "Rouge" :
-			pionRouge.argent += mtnLoyer;
-			break;
-		case "Bleu" :
-			pionBleu.argent += mtnLoyer;
-			break;
-		case "Jaune" :
-			pionJaune.argent += mtnLoyer;
-			break;
-		case "Vert" :
-			pionVert.argent += mtnLoyer;
-			break;
-	}
-
-	//Soustraire le loyer au joueur qui est tombé sur la case.
-	pion.argent -= mtnLoyer;
-	
-	this.majArgent();
+		var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
+		//Récuperation du propriétaire
+		//Récuperer le loyer du terrain.
+		if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
+			var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
+		}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
+			var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
+		} else {
+			var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
+		}
+		var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
+		//Ajouter l'argent du loyer au proprietaire.
+		switch(proprietaire) {
+			case "Rouge" :
+				pionRouge.argent += mtnLoyer;
+				break;
+			case "Bleu" :
+				pionBleu.argent += mtnLoyer;
+				break;
+			case "Jaune" :
+				pionJaune.argent += mtnLoyer;
+				break;
+			case "Vert" :
+				pionVert.argent += mtnLoyer;
+				break;
+		}
+		//Soustraire le loyer au joueur qui est tombé sur la case.
+		pion.argent -= mtnLoyer;
+		this.majArgent();
 }
 
 function log(pion,texte) {
@@ -590,8 +639,14 @@ function jouer() {
 			prochainJoueur();
 			document.getElementById('boutonDes').innerHTML = 'Lancer des';
 			log(getPion(numJoueurEnJeu),'A vous de jouer.');
-			if(getPion(numJoueurEnJeu).prison == 1) {
-				log(getPion(numJoueurEnJeu), 'Vous êtes en prison, il faut faire un double pour sortir de prison.');
+			if(getPion(numJoueurEnJeu).prison == 1) {	
+				if(getPion(numJoueurEnJeu).sortiePrison == 1){
+					document.getElementById("btnPrisonCarte").style.display = "block";
+				}
+				else{
+					document.getElementById("btnPrisonCarte").style.display = "none";
+				}
+				$('#modalPrison').modal('show');
 			}
 		}else{
 			gestionnaireDes.lancerDes();
