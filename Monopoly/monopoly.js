@@ -145,7 +145,7 @@ function ajouterMaison(position){
 	}else{
 		classe = "verticale";
 	}
-	if(gestionnaireTerrain.lesCases[position-1][2] < 4){
+	if(gestionnaireTerrain.lesCases[position-1][2] <= 4){
 		document.getElementById("maisonCase"+position).innerHTML += "<div class='maison-"+ classe +"'>&nbsp;</div>";
 	}else{
 		document.getElementById("maisonCase"+position).innerHTML = "<div class='hotel-"+ classe +"'>&nbsp;</div>";
@@ -193,6 +193,7 @@ function actionCase(pion,position) {
 
 					if(!argentSuffisantMaison()) {
 						document.getElementById("acheterMaison").style.display = "none";
+						document.getElementById("maisonEnsemble").style.display = "none";
 					} else {				
 						document.getElementById("acheterMaison").style.display = "block";
 						if(!argentSuffisantEnsembleMaison()) {
@@ -206,6 +207,7 @@ function actionCase(pion,position) {
 				} else if(pion.couleur != gestionnaireTerrain.lesCases[pion.position-1][1]){
 					var doc = document.getElementById("modalPaiement");
 					doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
+					alert(Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position][2]]);
 					doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
 					if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
 						$('#modalPaiement').modal("show");
@@ -502,9 +504,7 @@ function argentSuffisantEnsembleMaison() {
 	var pion = getPion(numJoueurEnJeu);
 	liste = gestionnaireTerrain.listeTerrainCouleur(Contenu.fiches[pion.position-1].groupe);
 	for(i=0;i<liste.length;i++) {
-		log(pion, "Achete une maison sur "+Contenu.fiches[liste[i][0]].nom+" pour "+Contenu.fiches[liste[i][0]].prixMaison+" F");
 		var pos = liste[i][0];
-		gestionnaireTerrain.lesCases[pos][2] += 1;
 	}
 	if(pion.argent > liste.length*parseInt(Contenu.fiches[liste[0][0]].prixMaison)){
 		return true;
@@ -533,7 +533,6 @@ function paiementLoyer(pion) {
 		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
 	}
 	var mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
-
 	//Ajouter l'argent du loyer au proprietaire.
 	switch(proprietaire) {
 		case "Rouge" :
@@ -549,10 +548,8 @@ function paiementLoyer(pion) {
 			pionVert.argent += mtnLoyer;
 			break;
 	}
-
 	//Soustraire le loyer au joueur qui est tombé sur la case.
 	pion.argent -= mtnLoyer;
-	
 	this.majArgent();
 }
 

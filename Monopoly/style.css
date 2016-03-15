@@ -106,6 +106,7 @@ display: inline-block;}
 	border-style: solid;
     border-width: 1px;
 	background-color:green;
+	float:left;
 }
 
 .maison-verticale{
