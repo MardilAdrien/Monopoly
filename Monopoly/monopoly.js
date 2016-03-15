@@ -232,6 +232,7 @@ function actionCase(pion,position) {
 				document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
 				document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
 				document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
+				document.getElementById("prixHotel").innerHTML = Contenu.fiches[position].prixMaison;
 				document.getElementById("acheterMaison").style.display = "none";
 				//on n'affiche pas le bouton acheter si pas assez d'argent
 				if(!argentSuffisantAchat()) {
@@ -253,6 +254,7 @@ function actionCase(pion,position) {
 					document.getElementById("loyer4").innerHTML = Contenu.fiches[position].loyers[4];
 					document.getElementById("loyer5").innerHTML = Contenu.fiches[position].loyers[5];
 					document.getElementById("prixMaison").innerHTML = Contenu.fiches[position].prixMaison;
+					document.getElementById("prixHotel").innerHTML = Contenu.fiches[position].prixMaison;
 					document.getElementById("acheterTerrain").style.display = "none";
 
 					if(!argentSuffisantMaison()) {
