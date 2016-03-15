@@ -15,7 +15,7 @@ function gestionnaireTerrain() {
 			else if(i == 13 || i == 29){groupe = "Compagnie";}
 			else {groupe = "";}
 			// lesCases[Position] [Nom du groupe | couleur du joueur | nbMaison] -> gestionnaireTerrain.lesCases
-			this.lesCases.push([groupe,"Rouge",0]);
+			this.lesCases.push([groupe,"",0]);
 		}	
 	}
 	

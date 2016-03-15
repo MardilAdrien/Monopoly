@@ -273,7 +273,7 @@ function actionCase(pion,position) {
 					{
 						var doc = document.getElementById("modalPaiement");
 						doc.getElementsByClassName("modal-title")[0].innerHTML = "Paiement";
-						doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
+						doc.getElementsByClassName("info-paiement")[0].innerHTML = "Vous devez "+Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position][2]]+" au joueur "+gestionnaireTerrain.lesCases[position-1][1];
 						if(argentSuffisantPaiement(pion, Contenu.fiches[position].loyers[gestionnaireTerrain.lesCases[position-1][2]])) {
 							$('#modalPaiement').modal("show");
 

@@ -101,15 +101,14 @@
 				</div>
 				<div class="modal-footer" id="acheterTerrain">
 
-					<input type="button" class="btn btn-primary" value="Acheter" onclick="achatTerrain(getPion(numJoueurEnJeu));$('#modalLoyer').modal('hide');" title="Acheter" />
+					<input type="button" class="btn btn-primary" value="Acheter" onclick="$('#modalLoyer').modal('hide');achatTerrain(getPion(numJoueurEnJeu));" title="Acheter" />
 					
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
 				</div>
 
 				<div class="modal-footer" id="acheterMaison">
-					<input type="button" class="btn btn-primary" id="maisonEnsemble" value="Acheter maison ensemble" onclick="achatMaisonEnsemble();$('#modalLoyer').modal('hide');" title="Acheter une maison pour chaque terrain de cet ensemble" />
-					<input type="button" class="btn btn-primary" value="Acheter maison" onclick="achatMaison();$('#modalLoyer').modal('hide');" title="Acheter maison" />
-					
+					<button type="button" class="btn btn-primary float-left" onclick="$('#modalLoyer').modal('hide');achatMaison();" title="Maison" >Acheter Une Maison</button>
+					<button type="button" class="btn btn-primary float-left" id="maisonEnsemble" onclick="$('#modalLoyer').modal('hide');achatMaisonEnsemble();" title="Acheter une maison pour chaque terrain de cet ensemble" >Toutes</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalLoyer').modal('hide');">Refuser</button>
 				</div>
 			</div>
@@ -149,7 +148,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer" id="acheterGare">
-					<input type="button" class="btn btn-primary" value="Acheter gare" onclick="achatGare();$('#modalGare').modal('hide');" title="Acheter gare" />
+					<input type="button" class="btn btn-primary" value="Acheter gare" onclick="$('#modalGare').modal('hide');achatGare();" title="Acheter gare" />
 					
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalGare').modal('hide');">Refuser</button>
 				</div>
@@ -192,7 +191,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer" id="acheterCompagnie">
-					<input type="button" class="btn btn-primary" value="Acheter compagnie" onclick="achatCompagnie();$('#modalCompagnie').modal('hide');" title="Acheter compagnie" />
+					<input type="button" class="btn btn-primary" value="Acheter compagnie" onclick="$('#modalCompagnie').modal('hide');achatCompagnie();" title="Acheter compagnie" />
 					
 					<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modalCompagnie').modal('hide');">Refuser</button>
 				</div>
@@ -245,7 +244,7 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input type="button" class="btn btn-primary" value="Payer" onclick="paiementLoyer(getPion(numJoueurEnJeu));$('#modalPaiement').modal('hide');" title="Payer" />
+					<input type="button" class="btn btn-primary" value="Payer" onclick="$('#modalPaiement').modal('hide');paiementLoyer(getPion(numJoueurEnJeu));" title="Payer" />
 				</div>
 			</div>
 		</div>
@@ -272,9 +271,9 @@
 					</fieldset>
 				</div>
 				<div class="modal-footer">
-					<input type="button" class="btn btn-primary" value="Lancer Des" onclick="jouer();$('#modalPrison').modal('hide');" title="Lancer Des" />
-					<input type="button" class="btn btn-primary" value="Payer" onclick="sortirPrisonAvecPaiement();$('#modalPrison').modal('hide');" title="Payer" />
-					<input id="btnPrisonCarte" name="btnPrisonCarte" type="button" class="btn btn-primary" value="Utiliser Carte" onclick="sortirPrisonAvecCarte();$('#modalPrison').modal('hide');" title="Utiliser Carte" />
+					<input type="button" class="btn btn-primary" value="Lancer Des" onclick="$('#modalPrison').modal('hide');jouer();" title="Lancer Des" />
+					<input type="button" class="btn btn-primary" value="Payer" onclick="$('#modalPrison').modal('hide');sortirPrisonAvecPaiement();" title="Payer" />
+					<input id="btnPrisonCarte" name="btnPrisonCarte" type="button" class="btn btn-primary" value="Utiliser Carte" onclick="$('#modalPrison').modal('hide');sortirPrisonAvecCarte();" title="Utiliser Carte" />
 				</div>
 			</div>
 		</div>
