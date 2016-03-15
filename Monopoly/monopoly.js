@@ -574,7 +574,6 @@ function argentSuffisantPaiement(pion, montant) {
 }
 
 function paiementLoyer(pion) {
-<<<<<<< HEAD
 		var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
 		//Récuperation du propriétaire
 		//Récuperer le loyer du terrain.
@@ -604,43 +603,6 @@ function paiementLoyer(pion) {
 		//Soustraire le loyer au joueur qui est tombé sur la case.
 		pion.argent -= mtnLoyer;
 		this.majArgent();
-=======
-
-	var doc = document.getElementById("modalPaiement");
-	//Récuperation du propriétaire
-	var proprietaire = gestionnaireTerrain.lesCases[pion.position-1][1];
-	//Récuperer le loyer du terrain.
-	var mtnLoyer = 0;
-	if(gestionnaireTerrain.lesCases[pion.position-1][0] == "Gare") {
-		var nbLoyer = gestionnaireTerrain.nbGareDuJoueur(proprietaire) - 1;
-		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
-	}else if (gestionnaireTerrain.lesCases[pion.position-1][0] == "Compagnie") {
-		var couleurPionPossedantCompagnie = gestionnaireTerrain.lesCases[pion.position-1][1];
-		var nbLoyer = gestionnaireTerrain.nbCompagnieDuJoueur(proprietaire) - 1;
-		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]) * (gestionnaireDes.d1 + gestionnaireDes.d2);
-	} else {
-		var nbLoyer = gestionnaireTerrain.lesCases[pion.position-1][2];
-		mtnLoyer = parseInt(Contenu.fiches[pion.position-1].loyers[nbLoyer]);
-	}
-	//Ajouter l'argent du loyer au proprietaire.
-	switch(proprietaire) {
-		case "Rouge" :
-			pionRouge.argent += mtnLoyer;
-			break;
-		case "Bleu" :
-			pionBleu.argent += mtnLoyer;
-			break;
-		case "Jaune" :
-			pionJaune.argent += mtnLoyer;
-			break;
-		case "Vert" :
-			pionVert.argent += mtnLoyer;
-			break;
-	}
-	//Soustraire le loyer au joueur qui est tombé sur la case.
-	pion.argent -= mtnLoyer;
-	this.majArgent();
->>>>>>> a785727efe57033e18dc14cf7093cd0ed9040e58
 }
 
 function log(pion,texte) {
